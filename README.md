@@ -1,1 +1,1 @@
-# cook-islands-marketplace
+# Cook Islands Marketplace
