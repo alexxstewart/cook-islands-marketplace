@@ -2,6 +2,7 @@ import Link from 'next/link'
 import React from 'react'
 
 import { useUser } from '@auth0/nextjs-auth0/client';
+import LoggedInDropDown from './LoggedInDropDown';
 
 const Navbar = () => {
 
@@ -21,6 +22,7 @@ const Navbar = () => {
                     <>
                         <Link href='/' className='px-2 py-1 mx-2 bg-green-600 rounded-md hover:bg-green-500'>New Listing</Link>
                         <button className='mx-2 text-slate-800'>Test</button>
+                        <LoggedInDropDown user={user}/>
                     </>
                 )} 
             </div>
