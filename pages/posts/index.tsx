@@ -12,18 +12,6 @@ import Image from 'next/image';
 // This gets called on every request
 export async function getServerSideProps() {
 
-    // const data = await ddbDocClient.send(new PutCommand({
-    //     TableName: "Posts",
-    //     Item: {
-    //         postID: uuidv4(),
-    //         description: 'Hello there my name is alex',
-    //         price: '$5000.00',
-    //         productName: 'Nissan Car',
-    //     },
-    // }));
-
-    // console.log("Submitted the data: ", data);
-
     const importData = await ddbDocClient.send(new ScanCommand({ TableName: "Posts" }));
 
     console.log("Import data: ", importData);
@@ -52,6 +40,7 @@ const index = ({items}: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                 <p className='text-2xl'>{item.price?.S}</p>
                                 <p className='text-md text-slate-400'>{item.productName?.S}</p>
                                 <p className='text-sm text-slate-400'>{item.description?.S}</p>
+                                <p className='text-sm text-slate-400'>{item.by?.S}</p>
                             </div>
                         </Link>
                     )

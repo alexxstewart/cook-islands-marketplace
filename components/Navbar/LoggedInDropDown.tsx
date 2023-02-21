@@ -18,8 +18,8 @@ export default function LoggedInDropDown() {
 				</div>
 				
 				<div className="py-1" role="none">
-					<Link href="#" className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" id="menu-item-0">Profile</Link>
-					<Link href="#" className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" id="menu-item-1">Your Listings</Link>
+					<Link href="/profile" className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" id="menu-item-0">Profile</Link>
+					<Link href="/yourposts" className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" id="menu-item-1">Your Listings</Link>
 				</div>
 				<div className="py-1" role="none">
 					<Link href='/api/auth/logout' className='text-slate-800 ml: 2'>Log out</Link>
