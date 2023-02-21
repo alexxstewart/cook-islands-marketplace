@@ -25,7 +25,7 @@ const Navbar = () => {
                     <>
                         <Link href='/posts/new' className='px-2 py-1 mx-2 bg-green-600 rounded-md hover:bg-green-500'>New Listing</Link>
                         <button className='mx-2 text-slate-800'>Test</button>
-                        <LoggedInDropDown user={user}/>
+                        <LoggedInDropDown />
                     </>
                 )} 
             </div>
