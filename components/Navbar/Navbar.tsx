@@ -14,13 +14,16 @@ const Navbar = () => {
                 <li className='text-2xl px-4 text-slate-900'>
                     <Link href='/'>Cook Islands Marketplace</Link>
                 </li>
+                <li className='text-2xl px-4 text-slate-900'>
+                    <Link href='/posts'>Posts</Link>
+                </li>
             </ul>
 
             <div>
                 {!user && (<Link href='/api/auth/login' className='p-2 mx-2 bg-sky-600 rounded-md hover:bg-sky-400'>Log in</Link>)}
                 {user && (
                     <>
-                        <Link href='/' className='px-2 py-1 mx-2 bg-green-600 rounded-md hover:bg-green-500'>New Listing</Link>
+                        <Link href='/posts/new' className='px-2 py-1 mx-2 bg-green-600 rounded-md hover:bg-green-500'>New Listing</Link>
                         <button className='mx-2 text-slate-800'>Test</button>
                         <LoggedInDropDown user={user}/>
                     </>

@@ -55,6 +55,8 @@ const Listings = ({ data }: any) => {
         },
     ]
 
+    console.log("Data: ", data);
+
     return (
         <div>
             <h1>Listings</h1>
@@ -70,9 +72,10 @@ export async function getServerSideProps() {
     // const res = await fetch(`https://.../data`)
     // const data = await res.json()
 
+    console.log("Testing server side props...");
 
     // Pass data to the page via props
-    return { props: { } }
+    return { props: { test: "Test" } }
 }
 
 export default Listings
