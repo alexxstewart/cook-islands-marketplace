@@ -6,6 +6,8 @@ import { PutCommand } from '@aws-sdk/lib-dynamodb';
 
 import { v4 as uuidv4 } from 'uuid';
 import { InferGetServerSidePropsType } from 'next';
+import Link from 'next/link';
+import Image from 'next/image';
 
 // This gets called on every request
 export async function getServerSideProps() {
@@ -36,11 +38,25 @@ const index = ({items}: InferGetServerSidePropsType<typeof getServerSideProps>) 
     return (
         <div>
             <div>Posts</div>
-            {items?.map((item: any, index: number) => {
-                return (
-                    <p key={index}>{item.postID.S}</p>
-                )
-            })}
+            <div className='grid grid-cols-6'>
+                {items?.map((item: any, index: number) => {
+                    return (
+                        <Link href={{pathname: `/posts/${item.postID.S}`}} key={item.postID.S}>
+                            <div className='bg-slate-800 rounded m-4 p-4 hover:bg-slate-700 hover:shadow-xl hover:shadow-neutral-800'>
+                                <Image
+                                    src="/../public/car.jpg"
+                                    alt="Picture of the author"
+                                    width={500}
+                                    height={500}
+                                />
+                                <p className='text-2xl'>{item.price?.S}</p>
+                                <p className='text-md text-slate-400'>{item.productName?.S}</p>
+                                <p className='text-sm text-slate-400'>{item.description?.S}</p>
+                            </div>
+                        </Link>
+                    )
+                })}
+            </div>
         </div>
     )
 }
