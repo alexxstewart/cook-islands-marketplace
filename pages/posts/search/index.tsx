@@ -1,16 +1,29 @@
 import { ddbDocClient } from '@/lib/ddbDocClient';
 import { ScanCommand } from '@aws-sdk/client-dynamodb';
-import { InferGetServerSidePropsType } from 'next';
+import { InferGetServerSidePropsType, InferGetStaticPropsType } from 'next';
 import React from 'react'
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: any) {
 
-    const importData = await ddbDocClient.send(new ScanCommand({ TableName: "Posts" }));
+    console.log("Context: ", context.query);
 
-    console.log("Import data: ", importData);
+    // const importData = await ddbDocClient.send(new ScanCommand({ TableName: "Posts" }));
 
-    return { props: { items: importData.Items} }
+    // console.log("Import data: ", importData);
+
+    return { props: { items: []} }
 }
+
+// export async function getStaticProps(context: any) {
+
+//     console.log("Search Context: ", context)
+
+//     // const importData = await ddbDocClient.send(new ScanCommand({ TableName: "Posts" }));
+
+//     // console.log("Import data: ", importData);
+
+//     return { props: { items: []} }
+// }
 
 const index = ({items}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     return (

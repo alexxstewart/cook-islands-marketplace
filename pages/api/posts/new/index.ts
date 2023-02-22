@@ -9,6 +9,8 @@ export default withApiAuthRequired(async function handler(req: NextApiRequest, r
     const session = await getSession(req, res);
     console.log("Session: ", session);
 
+    console.log("Request: ", req);
+
     if (session?.user) {
         const data = await ddbDocClient.send(new PutCommand({
             TableName: "Posts",
