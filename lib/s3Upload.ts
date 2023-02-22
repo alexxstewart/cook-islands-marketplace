@@ -8,9 +8,11 @@ export const upload = multer({
         s3: s3Client,
         bucket: 'cook-islands-marketplace-item-images',
         metadata: function (req, file, cb) {
+            console.log("Writing the metadata...")
             cb(null, {fieldName: file.fieldname});
         },
         key: function (req, file, cb) {
+            console.log('Setting the key...')
             cb(null, uuidv4())
         }
     })

@@ -1,26 +1,43 @@
-import UiFileInputButton from '@/components/UploadFiles';
 import React from 'react'
 import Image from 'next/image';
 import axios from 'axios';
+import { useState } from "react";
+import { useS3Upload } from "next-s3-upload";
 
 const NewPost = () => {
     
     const [files, setFiles] = React.useState<any[]>([]);
 
-    const onChange = async (formData: any) => {
+    let [imageUrl, setImageUrl] = useState('');
+    let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
+  
+    let handleFileChange = async (file: any) => {
+        console.log("File: ", file);
+        if (file) {
+            let { url } = await uploadToS3(file);
+            setImageUrl(url);
+        }
+    };
+
+    const onChange = async () => {
         const config = {
-          headers: { 'content-type': 'multipart/form-data' },
-          onUploadProgress: (event: any) => {
-            console.log(`Current progress:`, Math.round((event.loaded * 100) / event.total));
-          },
+            headers: { 'content-type': 'multipart/form-data' },
+            onUploadProgress: (event: any) => {
+                console.log(`Current progress:`, Math.round((event.loaded * 100) / event.total));
+            },
         };
     
-        const response = await axios("/api/posts/new", {
-            method: "POST",
-            // body: formData,
-        });
+        const formData = new FormData();
+        // for (let i = 0; i < files.length; i++ ) {
+        //     console.log(files[i]);
+        // }
+        formData.append(`image`, files[0]);
+
+        console.log("Form data: ", formData);
+
+        const response = await axios.post("/api/posts/new", formData, config);
     
-        console.log('response', response);
+        console.log('Response: ', response);
     };
 
     const fileChange = (event: any) => {
@@ -30,7 +47,7 @@ const NewPost = () => {
             newFile.previewURL = URL.createObjectURL(event.target.files[i]);
             newFiles.push(newFile);
         }
-        console.log(files, newFiles);
+        console.log(files);
         setFiles([...files, ...newFiles]);
         
     }
@@ -85,6 +102,30 @@ const NewPost = () => {
                         )
                     })}
                 </div>
+
+                {/* <div>
+
+                <input
+                    type="file"
+                    name="file"
+                    multiple={true}
+                    onChange={handleFilesChange}
+                />
+
+                <div>
+                    {urls.map((url, index) => (
+                    <div key={url}>
+                        File {index}: ${url}
+                    </div>
+                    ))}
+                </div>
+                </div> */}
+
+                <FileInput onChange={handleFileChange} />
+
+                <button className='text-slate-800' onClick={openFileDialog}>Upload file</button>
+
+                {imageUrl && <img src={imageUrl} />}
 
                 <div className="flex items-center justify-center">
                     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Create post</button>
