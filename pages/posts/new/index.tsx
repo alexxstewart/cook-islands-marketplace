@@ -73,7 +73,7 @@ const NewPost = () => {
                 <div className='mt-2'></div>
 
                 <label htmlFor="images" className='text-slate-800'>Images</label>
-                <input type="file" multiple onChange={fileChange} />
+                <input type="file" multiple onChange={fileChange} accept='.jpeg, .jpg, .png'/>
 
                 <div className='grid grid-cols-6 my-2'>
                     {files?.map((file: any, index: number) => {
