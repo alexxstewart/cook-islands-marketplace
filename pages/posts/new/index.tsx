@@ -6,51 +6,20 @@ import { useS3Upload } from "next-s3-upload";
 
 const NewPost = () => {
     
-    const [files, setFiles] = React.useState<any[]>([]);
-
-    let [imageUrl, setImageUrl] = useState('');
-    let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
+    const [urls, setUrls] = useState<string[]>([]);
+    const { uploadToS3 } = useS3Upload();
   
-    let handleFileChange = async (file: any) => {
-        console.log("File: ", file);
-        if (file) {
-            let { url } = await uploadToS3(file);
-            setImageUrl(url);
-        }
+    const handleFilesChange = async ({ target }:any) => {
+      const files = Array.from(target.files);
+  
+      for (let index = 0; index < files.length; index++) {
+        const file:any = files[index];
+        const { url } = await uploadToS3(file);
+        console.log("Got url: ", url);
+        setUrls(current => [...current, url]);
+      }
     };
-
-    const onChange = async () => {
-        const config = {
-            headers: { 'content-type': 'multipart/form-data' },
-            onUploadProgress: (event: any) => {
-                console.log(`Current progress:`, Math.round((event.loaded * 100) / event.total));
-            },
-        };
-    
-        const formData = new FormData();
-        // for (let i = 0; i < files.length; i++ ) {
-        //     console.log(files[i]);
-        // }
-        formData.append(`image`, files[0]);
-
-        console.log("Form data: ", formData);
-
-        const response = await axios.post("/api/posts/new", formData, config);
-    
-        console.log('Response: ', response);
-    };
-
-    const fileChange = (event: any) => {
-        const newFiles: any[] = [];
-        for(let i = 0; i < event.target.files.length; i++) {
-            const newFile = event.target.files[i];
-            newFile.previewURL = URL.createObjectURL(event.target.files[i]);
-            newFiles.push(newFile);
-        }
-        console.log(files);
-        setFiles([...files, ...newFiles]);
-        
-    }
+  
     
     return (
         <div className='m-4 w-1/2 mx-auto'>
@@ -90,42 +59,23 @@ const NewPost = () => {
 
                 <div className='mt-2'></div>
 
-                <label htmlFor="images" className='text-slate-800'>Images</label>
-                <input type="file" multiple onChange={fileChange} accept='.jpeg, .jpg, .png'/>
-
-                <div className='grid grid-cols-6 my-2'>
-                    {files?.map((file: any, index: number) => {
-                        return (
-                            <div className='p-2 bg-slate-400 rounded hover:bg-slate-300 m-1' key={index}>
-                                <Image src={file.previewURL} width={100} height={100} alt={file.previewURL}/>
-                            </div>
-                        )
-                    })}
-                </div>
-
-                {/* <div>
-
-                <input
-                    type="file"
-                    name="file"
-                    multiple={true}
-                    onChange={handleFilesChange}
-                />
-
                 <div>
-                    {urls.map((url, index) => (
-                    <div key={url}>
-                        File {index}: ${url}
+                    <input
+                        type="file"
+                        name="file"
+                        multiple={true}
+                        onChange={handleFilesChange}
+                    />
+
+                    <div>
+                        {urls.map((url, index) => (
+                        <div key={url}>
+                            <Image alt={"Image"} src={url} width={200} height={200}/>
+                            File {index}: ${url}
+                        </div>
+                        ))}
                     </div>
-                    ))}
                 </div>
-                </div> */}
-
-                <FileInput onChange={handleFileChange} />
-
-                <button className='text-slate-800' onClick={openFileDialog}>Upload file</button>
-
-                {imageUrl && <img src={imageUrl} />}
 
                 <div className="flex items-center justify-center">
                     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Create post</button>
