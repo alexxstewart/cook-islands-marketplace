@@ -1,6 +1,7 @@
 import UiFileInputButton from '@/components/UploadFiles';
 import React from 'react'
 import Image from 'next/image';
+import axios from 'axios';
 
 const NewPost = () => {
     
@@ -14,9 +15,9 @@ const NewPost = () => {
           },
         };
     
-        const response = await fetch("/api/posts/new", {
+        const response = await axios("/api/posts/new", {
             method: "POST",
-            body: formData,
+            // body: formData,
         });
     
         console.log('response', response);
