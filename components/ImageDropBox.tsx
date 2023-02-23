@@ -25,7 +25,7 @@ const ImageDropBox = ({files, setFiles}: any) => {
                 {files.map((file: File, index: number) => {
                     const previewURL = URL.createObjectURL(file);
                     return (
-                        <div key={'previewImage'+index} className='rounded p-2 bg-white'>
+                        <div key={'previewImage'+index} className='rounded p-2 bg-white mx-2'>
                             <Image alt={''} src={previewURL} width={200} height={200}/>
                         </div>
                     )
@@ -35,8 +35,8 @@ const ImageDropBox = ({files, setFiles}: any) => {
             <div className='mt-2 text-center'>
                 {
                     isDragActive ?
-                    <p>Drop the files here ...</p> :
-                    <p>Drag 'n' drop some files here, or click to select files</p>
+                    <p className='text-slate-600'>Drop the images here ...</p> :
+                    <p className='text-slate-600'>Drag 'n' drop some images here, or click to select images</p>
                 }
             </div>
         </div>

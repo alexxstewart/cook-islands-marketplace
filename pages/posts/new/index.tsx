@@ -4,14 +4,18 @@ import axios from 'axios';
 import { useState } from "react";
 import { useS3Upload } from "next-s3-upload";
 import ImageDropBox from '@/components/ImageDropBox';
-import { Dropdown } from "@nextui-org/react";
+import { Button, Dropdown, Loading, Progress } from "@nextui-org/react";
 
 const NewPost = () => {
     
+    // UI STATE VALUES
+    const [loadingState, setLoadingState] = React.useState(false);
+
     // FORM INPUT VALUES
     const [title, setTitle] = React.useState('');
     const [price, setPrice] = React.useState('');
     const [description, setDescription] = React.useState('');
+    const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
 
     const [urls, setUrls] = useState<string[]>([]);
     const { uploadToS3, files } = useS3Upload();    
@@ -19,22 +23,28 @@ const NewPost = () => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   
     const handleFilesUpload = async () => {
+        setLoadingState(true);
+        const savedImageURLs = [];
+
         const files = Array.from(selectedFiles);
         for (let index = 0; index < files.length; index++) {
             const file:any = files[index];
             const { url } = await uploadToS3(file);
             console.log("Got url: ", url);
+            savedImageURLs.push(url);
             setUrls(current => [...current, url]);
         }
-        submitForm()
+        submitForm(savedImageURLs);
     };
 
     const handleFiles = (event: any) => {
         setSelectedFiles(current => [...current, ...event.target.files]);
     }
 
-    const submitForm = () => {
-
+    const submitForm = (urls: string[]) => {
+        console.log("File uploading done, now uploading form data...");
+        console.log(urls);
+        setLoadingState(false)
     }
 
     const removeFile = (index: number) => {
@@ -62,8 +72,16 @@ const NewPost = () => {
         'Jewellery & watches',
         'Electronics & photography',
         'Business, farming & industry',
-    ]
+    ];
   
+    const handleCheckboxChange = (category: string, checkedState: any) => {
+        console.log(category);
+        console.log(checkedState);
+        if (checkedState) setSelectedCategories(current => [...current, category]);
+        else if (!checkedState) { // Remove category from the selected category array
+
+        }
+    }
     
     return (
         <div className='m-4 w-1/2 mx-auto'>
@@ -110,7 +128,7 @@ const NewPost = () => {
                 <div className='grid grid-cols-4 mb-4'>
                     {categories.map((category: string, index: number) => {
                         return (
-                            <div key={category} className='flex-row'>
+                            <div key={category} className='flex-row' onClick={(event: any) => handleCheckboxChange(category, event.target.checked)}>
                                 <input name={category} type='checkbox' className='rounded p-1 m-2 bg-slate-400'/>
                                 <label className='text-slate-800'>{category}</label>
                             </div>
@@ -121,45 +139,37 @@ const NewPost = () => {
                 <ImageDropBox files={selectedFiles} setFiles={setSelectedFiles}/>
 
                 <div className='mt-2'></div>
-
-                <div>
-                    <input multiple accept='.jpg, .jpeg, .png, .gif' onChange={handleFiles} type="file" />
-
-                    <div className='grid grid-cols-6'>
-                        {selectedFiles.map((file: any, index: number) => {
-                            const previewURL = URL.createObjectURL(file);
-                            return (
-                                <div key={index+'imagepreview'} className='p-2 m-1 bg-slate-500 hover:bg-slate-300 rounded'>
-                                    <p className='text-sm'>{file.name}</p>
-                                    <p className='text-xs'>Size: {file.size}</p>
-                                    <Image alt={file.name} src={previewURL} width={200} height={200}/>  
-                                    <button className='text-yellow-600' onClick={(e) => {
-                                        e.preventDefault();
-                                        removeFile(index)
-                                    }}>Remove</button>
-                                </div>
-                            )
-                        })}
+                
+                {files.length > 0 && (
+                    <div className='mb-4'>
+                        <div className="pt-8">
+                            <p className='text-lg text-slate-600'>Uploading images...</p>
+                            {files.map((file, index) => {
+                                const previewURL = URL.createObjectURL(file.file)
+                                return (
+                                    <div key={index}className='text-slate-800 rounded p-2 m-2 bg-slate-400'>
+                                        <div className='flex justify-between mb-1'>
+                                            <div className='flex justify-start'>
+                                                <Image alt={file.file.name} src={previewURL} width={50} height={50}/>
+                                                <p className='ml-2'>{file.file.name}</p>
+                                            </div>
+                                            <p>Progress: {file.progress}%</p>
+                                        </div>
+                                        <Progress color="primary" size="xs" value={file.progress} />
+                                    </div>
+                                )
+                            })}
+                        </div>
                     </div>
+                )}
 
-                    <div className="pt-8">
-                        {files.map((file, index) => (
-                            <div key={index}className='text-slate-800'>
-                                File #{index} progress: {file.progress}%
-                            </div>
-                        ))}
-                        {urls.map((url: string, index: number) => (
-                            <div key={"hello" + index} className='p-2 bg-slate-500'>
-                                <Image src={url} alt={'Imegas'} width={200} height={200}/>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <button className='p-2 m-2 text-slate-800 bg-sky-800 rounded' onClick={handleFilesUpload}>Upload Files</button>
-
-                <div className="flex items-center justify-center">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Create post</button>
+                <div className='flex items-center justify-center'>
+                    <Button 
+                        disabled={loadingState}
+                        icon={loadingState && <Loading />} 
+                        color="success"
+                        onClick={handleFilesUpload}
+                    >Create Post</Button>
                 </div>
             </form>
 
