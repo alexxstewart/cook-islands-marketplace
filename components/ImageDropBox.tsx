@@ -10,7 +10,14 @@ const ImageDropBox = ({files, setFiles}: any) => {
         console.log("Accepted Files: ", acceptedFiles);
     }, [])
 
-    const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+    const {getRootProps, getInputProps, isDragActive} = useDropzone({
+        onDrop,
+        accept: {
+            'image/png': ['.png'],
+            'image/jpeg': ['.jpeg'],
+            'image/jpg': ['.jpg'],
+        }
+    })
 
     return (
         <div {...getRootProps()} className='bg-gray-300 p-4 rounded my-4 border-2 border-dashed border-gray-400'>
@@ -24,7 +31,7 @@ const ImageDropBox = ({files, setFiles}: any) => {
                     )
                 })}
             </div>
-            <input {...getInputProps()} />
+            <input {...getInputProps()}/>
             <div className='mt-2 text-center'>
                 {
                     isDragActive ?
