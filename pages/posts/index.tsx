@@ -41,11 +41,14 @@ const index = ({items}: InferGetServerSidePropsType<typeof getServerSideProps>) 
             </form>
             <div className='grid grid-cols-6'>
                 {items?.map((item: any, index: number) => {
+                    let imageURL = '/../public/car.jpg'; 
+                    if (item.image_urls) imageURL = item.image_urls.L[0].S
+                    
                     return (
                         <Link href={{pathname: `/posts/${item.postID.S}`}} key={item.postID.S}>
                             <div className='bg-slate-800 rounded m-4 p-4 hover:bg-slate-700 hover:shadow-xl hover:shadow-neutral-800'>
                                 <Image
-                                    src="/../public/car.jpg"
+                                    src={imageURL}
                                     alt="Picture of the author"
                                     width={500}
                                     height={500}

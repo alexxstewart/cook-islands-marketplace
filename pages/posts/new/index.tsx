@@ -44,7 +44,17 @@ const NewPost = () => {
     const submitForm = (urls: string[]) => {
         console.log("File uploading done, now uploading form data...");
         console.log(urls);
-        setLoadingState(false)
+        setLoadingState(false);
+        const data = {
+            title: title,
+            price: price, 
+            description: description,
+            selectedCategories: selectedCategories,
+            image_urls: urls,
+        }
+        console.log("SUBMITED DATA: ", data);
+
+        const response = axios.post('/api/posts/new', data);
     }
 
     const removeFile = (index: number) => {
@@ -79,7 +89,12 @@ const NewPost = () => {
         console.log(checkedState);
         if (checkedState) setSelectedCategories(current => [...current, category]);
         else if (!checkedState) { // Remove category from the selected category array
-
+            const index = selectedCategories.indexOf(category);
+            if (index > 0) { // Remove the value from the array
+                const newArray = selectedCategories;
+                newArray.splice(index, 1);
+                setSelectedCategories(newArray);
+            }
         }
     }
     
