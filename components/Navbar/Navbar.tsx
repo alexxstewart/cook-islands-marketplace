@@ -37,9 +37,6 @@ const Navbar = () => {
                         </svg>
                     </Link>
                 </li>
-                <li className='text-2xl px-4 text-slate-100'>
-                    <Link href='/posts'>Posts</Link>
-                </li>
             </ul>
 
             <div className='mr-2'>

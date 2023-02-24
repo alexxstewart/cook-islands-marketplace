@@ -8,12 +8,13 @@ const Listings = ({ items }: any) => {
         <div>
             <div className='grid grid-cols-6 w-4/6 mx-auto'>
                 {items.map((post: any, index: number) => {
-                    console.log("Post: ", post);
+                    let imageURL = '/../public/no_image.jpg'; 
+                    if (post.image_urls) imageURL = post.image_urls.L[0].S
                     return (
                         <Link href='/' key={post.postID.S}>
                             <div className='bg-slate-100 rounded m-2 p-4 hover:bg-slate-300 hover:shadow-xl hover:shadow-neutral-500'>
                                 <Image
-                                    src="/../public/car.jpg"
+                                    src={imageURL}
                                     alt="Picture of the author"
                                     width={500}
                                     height={500}
