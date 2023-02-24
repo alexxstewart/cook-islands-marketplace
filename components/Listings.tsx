@@ -59,7 +59,6 @@ const Listings = ({ data }: any) => {
 
     return (
         <div>
-            <h1>Listings</h1>
             <div className='grid grid-cols-4'>
                 {posts.map((post, index) => <Listing key={'123' + index} listing={post} />)}
             </div>
