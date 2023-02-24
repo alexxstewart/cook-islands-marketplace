@@ -3,10 +3,16 @@ import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import Listings from '@/components/Listings'
 import React from 'react'
+import { ddbDocClient } from '@/lib/ddbDocClient'
+import { ScanCommand } from '@aws-sdk/client-dynamodb'
+import { InferGetServerSidePropsType } from 'next'
 
-const inter = Inter({ subsets: ['latin'] })
+export async function getServerSideProps() {
+    const importData = await ddbDocClient.send(new ScanCommand({ TableName: "Posts" }));
+    return { props: { items: importData.Items} }
+}
 
-export default function Home() {
+export default function Home({items}: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
 	const [openState, setOpenState] = React.useState(false);
 
@@ -100,7 +106,7 @@ export default function Home() {
 					</div>
 					
 				</div>
-				<Listings/>
+				<Listings items={items}/>
 			</main>
 		</>
   	)
