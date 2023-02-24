@@ -41,7 +41,7 @@ const index = ({items}: InferGetServerSidePropsType<typeof getServerSideProps>) 
             </form>
             <div className='grid grid-cols-6'>
                 {items?.map((item: any, index: number) => {
-                    let imageURL = '/../public/car.jpg'; 
+                    let imageURL = '/../public/no_image.jpg'; 
                     if (item.image_urls) imageURL = item.image_urls.L[0].S
                     
                     return (

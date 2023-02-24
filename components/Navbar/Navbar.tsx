@@ -9,17 +9,17 @@ const Navbar = () => {
     const { user, error, isLoading } = useUser();
 
     return (
-        <div className='flex flex-row bg-white justify-between py-2'>
+        <div className='flex flex-row bg-slate-800 justify-between py-2'>
             <ul className='flex flex-row'>
-                <li className='text-2xl px-4 text-slate-900'>
+                <li className='text-2xl px-4 text-slate-100'>
                     <Link href='/'>Cook Islands Marketplace</Link>
                 </li>
-                <li className='text-2xl px-4 text-slate-900'>
+                <li className='text-2xl px-4 text-slate-100'>
                     <Link href='/posts'>Posts</Link>
                 </li>
             </ul>
 
-            <div>
+            <div className='mr-2'>
                 {!user && (<Link href='/api/auth/login' className='p-2 mx-2 bg-sky-600 rounded-md hover:bg-sky-400'>Log in</Link>)}
                 {user && (
                     <>

@@ -70,7 +70,7 @@ const Post = ({ item }: any) => {
     }
 
     return (
-        <div className="rounded p-4 bg-slate-500 w-1/2 mx-auto my-4">
+        <div className="rounded p-4 bg-slate-500 w-1/5 max-w-2xl min-w-min mx-auto my-4 shadow-lg shadow-slate-800">
 
             <Modal/>
 
@@ -87,7 +87,9 @@ const Post = ({ item }: any) => {
                         </div>
                     )
                 }) : (
-                    <div></div>
+                    <div>
+                        <Image src={'/../public/no_image.jpg'} alt={'No image'} width={500} height={500}/>
+                    </div>
                 )}
             </Carousel>
 

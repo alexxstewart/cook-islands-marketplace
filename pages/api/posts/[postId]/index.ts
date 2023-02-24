@@ -14,7 +14,7 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
             TableName: "Posts",
             Key: {
                 postID: {
-                    S: postId,
+                    S: postId ? Array.isArray(postId) ? postId[0] : postId : '',
                 },
             },
         }));
