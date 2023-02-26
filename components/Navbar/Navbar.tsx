@@ -9,7 +9,7 @@ const Navbar = () => {
     const { user, error, isLoading } = useUser();
 
     return (
-        <div className='flex flex-row bg-slate-800 justify-between py-2'>
+        <div className='flex flex-row bg-slate-800 justify-between py-2 fixed top-0 z-50 w-full'>
             <ul className='flex flex-row'>
                 <li className='text-2xl px-4 text-slate-100'>
                     <Link href='/'>
