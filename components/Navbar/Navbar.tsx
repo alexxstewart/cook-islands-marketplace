@@ -39,7 +39,7 @@ const Navbar = () => {
                 </li>
             </ul>
 
-            <div className='mr-2'>
+            <div className='mr-2 my-auto'>
                 {!user && (<Link href='/api/auth/login' className='p-2 mx-2 bg-sky-600 rounded-md hover:bg-sky-400'>Log in</Link>)}
                 {user && (
                     <>

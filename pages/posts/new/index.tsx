@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useState } from "react";
 import { useS3Upload } from "next-s3-upload";
 import ImageDropBox from '@/components/ImageDropBox';
-import { Button, Dropdown, Loading, Progress } from "@nextui-org/react";
+import { Button, Loading, Progress } from "@nextui-org/react";
 
 const NewPost = () => {
     
@@ -15,6 +15,7 @@ const NewPost = () => {
     const [title, setTitle] = React.useState('');
     const [price, setPrice] = React.useState('');
     const [description, setDescription] = React.useState('');
+    const [location, setLocation] = React.useState('-');
     const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
 
     const [urls, setUrls] = useState<string[]>([]);
@@ -51,6 +52,7 @@ const NewPost = () => {
             description: description,
             selectedCategories: selectedCategories,
             image_urls: urls,
+            location: location
         }
         console.log("SUBMITED DATA: ", data);
 
@@ -82,6 +84,26 @@ const NewPost = () => {
         'Jewellery & watches',
         'Electronics & photography',
         'Business, farming & industry',
+    ];
+
+    const locations = [
+        '-',
+        'Aroa',
+        'Avarua',
+        'Avatiu',
+        'Avvavaroa',
+        'Kavera',
+        'Muri',
+        'Nikao',
+        'Takuvaine',
+        'Tikioki',
+        'Titikaveka',
+        'Tupapa',
+        'Turangi',
+        'Turoa',
+        'Rutaki',
+        'Vaimaanga',
+        'Other'
     ];
   
     const handleCheckboxChange = (category: string, checkedState: any) => {
@@ -115,16 +137,32 @@ const NewPost = () => {
                     value={title}
                     onChange={(event: any) => setTitle(event?.target.value)}
                 />
+
+                <div className='grid grid-cols-2'>
+                    <div className='w-full'>
+                        <label htmlFor="price" className='text-slate-800'>Price</label>
+                        <input
+                            type="text"
+                            id="price"
+                            name="price"
+                            className='shadow border border-slate-300 bg-slate-200 w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
+                            value={price}
+                            onChange={(event: any) => setPrice(event.target.value)}
+                        />
+                    </div>
+                    <div className='w-full'>
+                        <label className="text-gray-800">Select a location</label>
+                        <select value={location} onChange={(event: any) => setLocation(event.target.value)} className="shadow border border-slate-300 bg-slate-200 w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline">
+                            <option selected>Choose a location</option>
+                            {locations.map((location: string) => {
+                                return (
+                                    <option value={location} key={location}>{location}</option>
+                                )
+                            })}
+                        </select>
+                    </div>
+                </div>
             
-                <label htmlFor="price" className='text-slate-800'>Price</label>
-                <input
-                    type="text"
-                    id="price"
-                    name="price"
-                    className='shadow border border-slate-300 bg-slate-200 w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
-                    value={price}
-                    onChange={(event: any) => setPrice(event.target.value)}
-                />
                 
 
                 <label htmlFor="description" className='text-slate-800'>Description</label>
@@ -182,7 +220,6 @@ const NewPost = () => {
                     <Button 
                         disabled={loadingState}
                         icon={loadingState && <Loading />} 
-                        color="success"
                         onClick={handleFilesUpload}
                     >Create Post</Button>
                 </div>

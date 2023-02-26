@@ -31,6 +31,13 @@ const ImageDropBox = ({files, setFiles}: any) => {
                     )
                 })}
             </div>
+
+            {files.length === 0 && ( 
+                <div>
+                    <Image className='mx-auto rounded' alt={''} src={'/../public/no_image.jpg'} width={100} height={100}/> 
+                </div>
+            )}
+
             <input {...getInputProps()}/>
             <div className='mt-2 text-center'>
                 {

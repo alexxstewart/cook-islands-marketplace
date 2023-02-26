@@ -14,7 +14,8 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
             price: req.body.price,
             productName: req.body.title,
             categories: req.body.selected_categories,
-            image_urls: req.body.image_urls
+            image_urls: req.body.image_urls,
+            location: req.body.location
         },
     }));
     

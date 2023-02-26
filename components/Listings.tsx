@@ -11,7 +11,7 @@ const Listings = ({ items }: any) => {
                     let imageURL = '/../public/no_image.jpg'; 
                     if (post.image_urls) imageURL = post.image_urls.L[0].S
                     return (
-                        <Link href='/' key={post.postID.S}>
+                        <Link href={`/posts/${post.postID.S}`} key={post.postID.S}>
                             <div className='bg-slate-100 rounded m-2 p-4 hover:bg-slate-300 hover:shadow-xl hover:shadow-neutral-500'>
                                 <Image
                                     src={imageURL}
@@ -22,6 +22,7 @@ const Listings = ({ items }: any) => {
                                 <p className='text-2xl text-slate-700'>{post.productName ? post.productName.S : ''}</p>
                                 <p className='text-md text-slate-900'>{post.price ? post.price.S : ''}</p>
                                 <p className='text-sm text-slate-500'>{post.description ? post.description.S : ''}</p>
+                                <p className='text-xs text-slate-500'>{post.location ? post.location.S : ''}</p>
                             </div>
                         </Link>
                     )
