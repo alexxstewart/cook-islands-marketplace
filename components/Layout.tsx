@@ -8,8 +8,12 @@ type LayoutProps = {
 const Layout = ({ children }: LayoutProps): JSX.Element => {
     return (
         <>
-            <Navbar/>
-            {children}
+            <div className="fixed top-0 z-50">
+                <Navbar/>
+            </div>
+            <div className="top-50">
+                {children}
+            </div>
         </>
     )
 }

@@ -43,7 +43,7 @@ const Navbar = () => {
                 {!user && (<Link href='/api/auth/login' className='p-2 mx-2 bg-sky-600 rounded-md hover:bg-sky-400'>Log in</Link>)}
                 {user && (
                     <>
-                        <Link href='/posts/new' className='px-2 py-2 mx-2 bg-green-600 rounded-md hover:bg-green-500'>New Listing</Link>
+                        <Link href='/posts/new' className='p-2 mx-2 bg-green-600 rounded-md hover:bg-green-500'>New Listing</Link>
                         <LoggedInDropDown />
                     </>
                 )} 
