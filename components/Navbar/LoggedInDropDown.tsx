@@ -6,6 +6,8 @@ export default function LoggedInDropDown() {
   
 	const { user, error, isLoading } = useUser();
 
+	console.log("USER ID: ", user?.sub);
+
 	const [openState, setOpenState] = React.useState(false);
 	
 	return (
