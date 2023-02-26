@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { Inter } from '@next/font/google'
 import Listings from '@/components/Listings'
 import React from 'react'
 import { ddbDocClient } from '@/lib/ddbDocClient'
@@ -15,6 +14,8 @@ export async function getServerSideProps() {
 export default function Home({items}: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
 	const [openState, setOpenState] = React.useState(false);
+
+	const [searchValue, setSearchValue] = React.useState('');
 
 	const [categoriesDropdownState, setCategoriesDropdownState] = React.useState(false);
     const categories = [
@@ -37,6 +38,10 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
         'Electronics & photography',
         'Business, farming & industry',
     ];
+
+	const startSearch = () => {
+		console.log("Searching: ", searchValue, )
+	}
 
   	return (
     	<>
@@ -79,7 +84,7 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
 										<div className='grid grid-cols-2'>
 											{categories.map((category: string) => {
 													return (
-														<div key={category} className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+														<div onClick={() => console.log("logging...")} key={category} className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
 															<input id={'Checkbox-' + category} type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"/>
 															<label htmlFor="checkbox-item-4" className="w-full ml-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">{category}</label>
 														</div>
@@ -92,11 +97,11 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
 						</div>
 
 						<div className='w-full grow'>   
-							<input type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 py-5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search" required/>
+							<input value={searchValue} onChange={(event: any) => setSearchValue(event?.target.value)} type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 py-5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search" required/>
 						</div>
 
 						<div className='flex-none'>
-							<button type="submit" className="p-5 ml-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+							<button onClick={startSearch} type="submit" className="p-5 ml-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
 								<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
 								</svg>
