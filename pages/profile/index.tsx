@@ -4,16 +4,57 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import noImage from '../../public/no_image.jpg';
 import axios from 'axios';
 import Link from 'next/link';
+import { ddbDocClient } from '@/lib/ddbDocClient';
+import { ScanCommand } from '@aws-sdk/client-dynamodb';
+import { getSession } from '@auth0/nextjs-auth0';
+import { InferGetServerSidePropsType } from 'next';
 
-const ProfilePage = () => {
+// This gets called on every request
+export async function getServerSideProps(context: any) {
+    // Get the session
+    const session = await getSession(context.req, context.res);
+
+    if (session?.user) {
+        const importData = await ddbDocClient.send(new ScanCommand({ 
+            FilterExpression: "contains (userID, :userID)",
+            ExpressionAttributeValues: {
+              ":userID": { S: session?.user.sub },
+            },
+            TableName: "Users",
+        }));
+    
+        if (importData.Items && importData.Items[0]) { // Return the user data
+            return { props: { items: importData.Items }};
+        }
+    }
+    return { props: { } }
+}
+
+const ProfilePage = ({items}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
 
 	const { user, error, isLoading } = useUser();
 
+    const [phoneNum, setPhoneNum] = React.useState('');
+    const [lastName, setLastName] = React.useState('');
+    const [firstName, setfirstName] = React.useState('');
+
     const submitProfile = async () => {
-        console.log("Submitting profile...");
-        const res = await axios.patch('/api/profile', {data: '123'});
-        console.log("Submit profile response: ", res);
+        const res = await axios.patch('/api/profile', {
+            first_name: firstName,
+            last_name: lastName,
+            phone_number: phoneNum
+        });
     }
+
+    React.useEffect(() => {
+        if (items && items[0]) {
+            setfirstName(items[0].firstName.S!);
+            setLastName(items[0].lastName.S!);
+            setPhoneNum(items[0].phoneNumber.S!);
+
+        }
+
+    }, [])
 
     return (
         <div className='flex justify-center'>
@@ -27,23 +68,23 @@ const ProfilePage = () => {
 
                 <div>
                     <p>Email</p>
-                    <input disabled value={user ? user.name : ''} className='w-full p-2 rounded text-slate-400'/>
+                    <input disabled value={user ? user.name ? user.name : '' : ''} className='w-full p-2 rounded text-slate-400'/>
                 </div>
 
                 <div className='grid grid-cols-2 my-4 gap-4'>
                     <div className='w-full mr-1'>
                         <p>First Name</p>
-                        <input disabled value={'Alex'} className='w-full p-2 rounded text-slate-400'/>
+                        <input value={firstName} onChange={(event: any) => {setfirstName(event?.target.value); console.log("clicked")}} className='w-full p-2 rounded text-slate-400'/>
                     </div>
 
                     <div className='w-full ml-1'>
                         <p>Last Name</p>
-                        <input disabled value={'Stewart'} className='w-full p-2 rounded text-slate-400'/>
+                        <input value={lastName} onChange={(event: any) => setLastName(event?.target.value)} className='w-full p-2 rounded text-slate-400'/>
                     </div>
 
                     <div className='w-full'>
                         <p>Phone number</p>
-                        <input disabled value={'567398'} className='w-full p-2 rounded text-slate-400'/>
+                        <input value={phoneNum} onChange={(event: any) => setPhoneNum(event?.target.value)} className='w-full p-2 rounded text-slate-400'/>
                     </div>
 
                 </div>

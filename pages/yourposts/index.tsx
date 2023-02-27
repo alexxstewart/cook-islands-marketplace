@@ -18,7 +18,6 @@ export async function getServerSideProps(context: any) {
             ExpressionAttributeValues: {
               ":email": { S: session?.user.name },
             },
-            // ProjectionExpression: "ownedBy",
             TableName: "Posts",
         }));
     
