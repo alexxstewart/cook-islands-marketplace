@@ -51,7 +51,7 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<link rel="icon" href='' />
 			</Head>
-			<main className='bg-zinc-900'>
+			<main className='bg-white'>
 				<div className='max-h-32' >
 					<Image
 						src={'/../public/rarotongan.jpg'} 

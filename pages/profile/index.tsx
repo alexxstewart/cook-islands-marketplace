@@ -2,10 +2,18 @@ import React from 'react'
 import Image from 'next/image'
 import { useUser } from '@auth0/nextjs-auth0/client';
 import noImage from '../../public/no_image.jpg';
+import axios from 'axios';
+import Link from 'next/link';
 
 const ProfilePage = () => {
 
 	const { user, error, isLoading } = useUser();
+
+    const submitProfile = async () => {
+        console.log("Submitting profile...");
+        const res = await axios.patch('/api/profile', {data: '123'});
+        console.log("Submit profile response: ", res);
+    }
 
     return (
         <div className='flex justify-center'>
@@ -41,8 +49,8 @@ const ProfilePage = () => {
                 </div>
 
                 <div className='flex justify-center'>
-                    <button className='mx-1 rounded p-2 px-6 ring-2 ring-red-400 text-red-400'>Back</button>
-                    <button className='mx-1 rounded p-2 px-6 bg-sky-600'>Submit</button>
+                    <Link href='/' className='mx-1 rounded p-2 px-6 ring-2 ring-red-400 text-red-400'>Back</Link>
+                    <button className='mx-1 rounded p-2 px-6 bg-sky-600 hover:bg-sky-500 hover:ring-2 hover:ring-sky-200' onClick={submitProfile}>Submit</button>
                 </div>
             </div>
         </div>
