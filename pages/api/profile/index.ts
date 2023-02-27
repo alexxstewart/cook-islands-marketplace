@@ -19,12 +19,12 @@ export default withApiAuthRequired(async function handler(req: NextApiRequest, r
         Key: {
             "userID": session?.user.sub,
         },
-        UpdateExpression: "set firstName = :a, lastName = :b, phoneNumber = :c",
+        UpdateExpression: "set firstName = :a, lastName = :b, phoneNumber = :c, imageURL = :d",
         ExpressionAttributeValues: {
             ":a": req.body.first_name,
             ":b": req.body.last_name,
             ":c": req.body.phone_number,
-            // ":d": req.body.image_url,
+            ":d": req.body.image_url,
         }
     }));
 

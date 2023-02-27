@@ -1,10 +1,13 @@
 import { ddbDocClient } from '@/lib/ddbDocClient';
+import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0';
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid';
 
-export default async function handler( req: NextApiRequest, res: NextApiResponse) {
+export default withApiAuthRequired(async function handler( req: NextApiRequest, res: NextApiResponse) {
     console.log("Testing the API function here: ", req.body);
+
+    const session = await getSession(req, res); // Get the users session
 
     const data = await ddbDocClient.send(new PutCommand({
         TableName: "Posts",
@@ -15,9 +18,10 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
             productName: req.body.title,
             categories: req.body.selected_categories,
             image_urls: req.body.image_urls,
-            location: req.body.location
+            location: req.body.location,
+            userID: session?.user.sub,
         },
     }));
     
     res.status(200).json({ name: 'John Doe' })
-}
+})

@@ -19,6 +19,8 @@ export async function getServerSideProps({ params }:any) {
         TableName: "Posts",
     }));
 
+    console.log("DATA: ", importData.Items);
+
     return {
         props: { item: importData.Items![0] }
     }
@@ -72,6 +74,15 @@ const Post = ({ item }: any) => {
         )
     }
 
+    const getUser = async () => {
+        console.log("Getting user: ", item.userID.S);
+        const getStatus = await axios.get(`/api/users/${item.userID.S}`);
+        console.log("GET COMMENT STATUS: ", getStatus);
+        if (getStatus.status === 200) {
+            // setComments(getStatus.data.items);
+        }
+    }
+
     const getComments = async () => {
         const getStatus = await axios.get(`/api/posts/${item.postID.S}/comments`);
         console.log("GET COMMENT STATUS: ", getStatus);
@@ -91,6 +102,7 @@ const Post = ({ item }: any) => {
 
     React.useEffect(() => {
         getComments();
+        getUser();
     }, [])
 
     return (
