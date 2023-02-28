@@ -79,13 +79,15 @@ const Post = ({ item }: any) => {
     }
 
     const getUser = async () => {
-        console.log("Getting user: ", item.userID.S);
-        const getStatus = await axios.get(`/api/users/${item.userID.S}`);
-        console.log("GET USER STATUS: ", getStatus);
-        if (getStatus.status === 200) {
-            // setPostUser();
-            console.log("GET USER: ", getStatus);
-            setPostUser(getStatus.data);
+        if (item.userID) {
+            console.log("Getting user: ", item.userID.S);
+            const getStatus = await axios.get(`/api/users/${item.userID.S}`);
+            console.log("GET USER STATUS: ", getStatus);
+            if (getStatus.status === 200) {
+                // setPostUser();
+                console.log("GET USER: ", getStatus);
+                setPostUser(getStatus.data);
+            }
         }
     }
 
@@ -112,23 +114,9 @@ const Post = ({ item }: any) => {
     }, [])
 
     return (
-        <div className="rounded p-4 bg-slate-500 w-1/5 max-w-2xl min-w-min mx-auto my-4 shadow-lg shadow-slate-800">
+        <div className="rounded p-4 bg-slate-500 max-w-xl min-w-lg mx-auto my-20 shadow-lg shadow-slate-800">
 
             <Modal/>
-            <div className='flex justify-right'>
-                <div className='flex justify-right'>
-                    <button  type="button" className="text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2 text-center inline-flex items-center mx-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="w-3 h-3" fill="currentColor" viewBox="0 0 512 512">
-                            <path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.8 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"/>
-                        </svg>
-                    </button>
-                    <button type="button" onClick={() => setDeleteConfirmationOpenState(prev => !prev)} className="text-white bg-red-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="w-3 h-3" fill="currentColor" viewBox="0 0 448 512">
-                            <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
 
             <div className="flex justify-between my-4">
                 <p className="text-3xl my-auto">{item.productName ? item.productName.S : ''}</p>
@@ -155,18 +143,48 @@ const Post = ({ item }: any) => {
 
             <div className="border h-0.5 border-slate-600 my-2"></div>
 
-            {postUser && (
-                <div className="flex justify-start my-4">
-                    <div>
-                        <Image src={postUser.image_url ? postUser.image_url : noImage} alt={''} width={40} height={40} className='object-cover rounded-full max-w-10 max-h-10'/>
+            <div className="flex justify-between">
+                {postUser ? (
+                    <div className="flex justify-start my-4">
+                        <div className="my-auto">
+                            <Image src={postUser.image_url ? postUser.image_url : noImage} alt={''} width={40} height={40} className='object-cover rounded-full max-w-10 max-h-10'/>
+                        </div>
+                        <div className="ml-2 my-auto">
+                            <p className="text-md text-slate-200">{postUser.first_name ? postUser.first_name : ''} {postUser.last_name ? postUser.last_name : ''}</p>
+                            <div className="flex justify-start">
+                                <div className="flex justify-start">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className="w-4 h-4 my-auto mr-2 fill-slate-300">
+                                        <path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm90.7 96.7c9.7-2.6 19.9 2.3 23.7 11.6l20 48c3.4 8.2 1 17.6-5.8 23.2L168 231.7c16.6 35.2 45.1 63.7 80.3 80.3l20.2-24.7c5.6-6.8 15-9.2 23.2-5.8l48 20c9.3 3.9 14.2 14 11.6 23.7l-12 44C336.9 378 329 384 320 384C196.3 384 96 283.7 96 160c0-9 6-16.9 14.7-19.3l44-12z"/>
+                                    </svg>
+                                    <p className="text-sm text-slate-300">{postUser.phone_number ? postUser.phone_number : '-'}</p>
+                                </div>
+                                <div className='flex justify-start mx-2'>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-4 h-4 my-auto mr-2 fill-slate-300">
+                                        <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/>
+                                    </svg>
+                                    <p className="text-sm text-slate-300">{postUser.email ? postUser.email : '-'}</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="ml-2">
-                        <p className="text-sm text-slate-300">{postUser.first_name ? postUser.first_name : ''} {postUser.last_name ? postUser.last_name : ''}</p>
-                        <p className="text-sm text-slate-300">{postUser.phone_number ? postUser.phone_number : ''}</p>
-                        <p className="text-sm text-slate-300">{postUser.email ? postUser.email : ''}</p>
+                ) : (
+                    <p className="text-slate-300 my-4">No user...</p>
+                )}
+                <div className='flex justify-right my-auto'>
+                    <div className='flex justify-right'>
+                        <button  type="button" className="w-10 h-10 text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2 text-center inline-flex items-center mx-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="w-3 h-3 m-auto" fill="currentColor" viewBox="0 0 512 512">
+                                <path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.8 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"/>
+                            </svg>
+                        </button>
+                        <button type="button" onClick={() => setDeleteConfirmationOpenState(prev => !prev)} className="w-10 h-10 text-white bg-red-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="w-3 h-3 m-auto" fill="currentColor" viewBox="0 0 448 512">
+                                <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
-            )}
+            </div>
 
             <div className="border h-0.5 border-slate-600"></div>
 
