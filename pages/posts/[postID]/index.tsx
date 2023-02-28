@@ -207,11 +207,13 @@ const Post = ({ item }: any) => {
                             type="text"
                             id="price"
                             name="price"
-                            className='mx-1 shadow border border-slate-300 bg-slate-200 w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
+                            className='mx-1 shadow border border-slate-300 bg-slate-200 w-full rounded px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
                             value={newComment}
                             onChange={(event: any) => setNewComment(event.target.value)}
                         />
-                        <button onClick={submitNewComment} className="bg-green-600 rounded p-2 mx-1">Submit</button>
+                        <button type="button" onClick={submitNewComment} className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">
+                            Submit
+                        </button>
                     </div>
                 </div>
             )}
