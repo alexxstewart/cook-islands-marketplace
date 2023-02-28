@@ -43,7 +43,7 @@ const ImageDropBox = ({files, setFiles}: any) => {
                 {
                     isDragActive ?
                     <p className='text-slate-600'>Drop the images here ...</p> :
-                    <p className='text-slate-600'>Drag 'n' drop some images here, or click to select images</p>
+                    <p className='text-slate-600'>Drag `n` drop some images here, or click to select images</p>
                 }
             </div>
         </div>
