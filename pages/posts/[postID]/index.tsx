@@ -2,10 +2,10 @@ import React from "react";
 import { ddbDocClient } from "@/lib/ddbDocClient";
 import { DeleteItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
 import Image from 'next/image';
-
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
 import axios from "axios";
+import noImage from '../../../public/no_image.jpg';
 
 export async function getServerSideProps({ params }:any) {
     // Fetch the post with the postID in the params
@@ -32,6 +32,10 @@ const Post = ({ item }: any) => {
     
     const [comments, setComments] = React.useState<any[]>([]);
     const [newComment, setNewComment] = React.useState('');
+
+    const [showComments, setShowComments] = React.useState(false);
+
+    const [postUser, setPostUser] = React.useState<any>(null);
 
     let image = '/../../public/car.jpg';
     if (item.image_urls) image = item.image_urls.L[0].S;
@@ -77,9 +81,11 @@ const Post = ({ item }: any) => {
     const getUser = async () => {
         console.log("Getting user: ", item.userID.S);
         const getStatus = await axios.get(`/api/users/${item.userID.S}`);
-        console.log("GET COMMENT STATUS: ", getStatus);
+        console.log("GET USER STATUS: ", getStatus);
         if (getStatus.status === 200) {
-            // setComments(getStatus.data.items);
+            // setPostUser();
+            console.log("GET USER: ", getStatus);
+            setPostUser(getStatus.data);
         }
     }
 
@@ -125,8 +131,8 @@ const Post = ({ item }: any) => {
             </div>
 
             <div className="flex justify-between my-4">
-                <p className="text-3xl">{item.productName ? item.productName.S : ''}</p>
-                <p className="text-slate-200">{item.price ? item.price.S : ''}</p>
+                <p className="text-3xl my-auto">{item.productName ? item.productName.S : ''}</p>
+                <p className="text-slate-200 my-auto">{item.price ? item.price.S : ''}</p>
             </div>
 
             <Carousel>
@@ -144,58 +150,66 @@ const Post = ({ item }: any) => {
             </Carousel>
 
             <div className="flex justify-between">
-                <p>{item.description ? item.description.S : ''}</p>
-            </div>
-            
-            <div onClick={() => console.log("")}>
-                <p className="text-slate-300">Comments</p>
+                <p className='text-lg text-slate-100'>{item.description ? item.description.S : ''}</p>
             </div>
 
-            <p className="mb-4 space-y-1 md:space-x-1 md:space-y-0">
-                <button
-                    className="inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                    type="button"
-                    data-te-collapse-init
-                    data-te-ripple-init
-                    data-te-ripple-color="light"
-                    data-te-target="#collapseExample"
-                    aria-expanded="false"
-                    aria-controls="collapseExample">
-                    Button with data-te-target
-                </button>
-            </p>
-            <div className="!visible hidden" id="collapseExample" data-te-collapse-item>
-                <div
-                    className="block rounded-lg bg-white p-6 shadow-lg dark:bg-neutral-700 dark:text-neutral-50">
-                    Some placeholder content for the collapse component. This panel is
-                    hidden by default but revealed when the user activates the relevant
-                    trigger.
+            <div className="border h-0.5 border-slate-600 my-2"></div>
+
+            {postUser && (
+                <div className="flex justify-start my-4">
+                    <div>
+                        <Image src={postUser.image_url ? postUser.image_url : noImage} alt={''} width={40} height={40} className='object-cover rounded-full max-w-10 max-h-10'/>
+                    </div>
+                    <div className="ml-2">
+                        <p className="text-sm text-slate-300">{postUser.first_name ? postUser.first_name : ''} {postUser.last_name ? postUser.last_name : ''}</p>
+                        <p className="text-sm text-slate-300">{postUser.phone_number ? postUser.phone_number : ''}</p>
+                        <p className="text-sm text-slate-300">{postUser.email ? postUser.email : ''}</p>
+                    </div>
                 </div>
+            )}
+
+            <div className="border h-0.5 border-slate-600"></div>
+
+            <div onClick={() => setShowComments(prev => !prev)} className='p-2 flex justify-between mt-6 hover:bg-slate-400 rounded'>
+                <p className='text-slate-300'>Comments</p>
+                {showComments ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className="w-4 h-4 my-auto fill-slate-300">
+                        <path d="M201.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L224 173.3 54.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"/>
+                    </svg>
+                ): (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className="w-4 h-4 my-auto fill-slate-300">
+                        <path d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/>
+                    </svg>
+                )}
             </div>
 
-            <div className="bg-slate-600 h-0.5 my-3"></div>
+            {showComments && (
+                <div>
+                    <div>
+                        {comments.map((comment: any, index: number) => {
+                            return (
+                                <div key={'comment'+index} className="p-2 bg-slate-600 rounded my-1">
+                                    <p className="text-sm text-slate-300">{comment.comment}</p>
+                                </div>
+                            )   
+                        })}
+                    </div>
 
-            <div>
-                {comments.map((comment: any, index: number) => {
-                    return (
-                        <div key={'comment'+index} className="p-2 bg-slate-600 rounded my-1">
-                            <p className="text-sm text-slate-300">{comment.comment}</p>
-                        </div>
-                    )   
-                })}
-            </div>
+                    <div className='w-full flex justify-center mt-3'>
+                        <input
+                            type="text"
+                            id="price"
+                            name="price"
+                            className='mx-1 shadow border border-slate-300 bg-slate-200 w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
+                            value={newComment}
+                            onChange={(event: any) => setNewComment(event.target.value)}
+                        />
+                        <button onClick={submitNewComment} className="bg-green-600 rounded p-2 mx-1">Submit</button>
+                    </div>
+                </div>
+            )}
 
-            <div className='w-full flex justify-center mt-3'>
-                <input
-                    type="text"
-                    id="price"
-                    name="price"
-                    className='mx-1 shadow border border-slate-300 bg-slate-200 w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
-                    value={newComment}
-                    onChange={(event: any) => setNewComment(event.target.value)}
-                />
-                <button onClick={submitNewComment} className="bg-green-600 rounded p-2 mx-1">Submit</button>
-            </div>
+
 
 
         </div>
