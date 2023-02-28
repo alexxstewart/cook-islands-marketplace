@@ -15,7 +15,8 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
                 commentID: uuidv4(),
                 postID: postId,
                 comment: req.body.comment,
-                commentBy: req.body.commentBy,
+                userID: req.body.userID,
+                date: Date.now().toString(),
             },
         }));
     
