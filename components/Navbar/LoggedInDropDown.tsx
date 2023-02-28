@@ -13,7 +13,7 @@ export default function LoggedInDropDown() {
 	return (
 		<div className="relative inline-block text-left">
 			<div>
-				<button onClick={() => setOpenState(prev => !prev)} type="button" className="justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100" id="menu-button" aria-expanded="true" aria-haspopup="true">Profile</button>
+				<button onClick={() => setOpenState(prev => !prev)} type="button" className="justify-center rounded-md border border-gray-300 bg-white  px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100" id="menu-button" aria-expanded="true" aria-haspopup="true">Profile</button>
 			</div>
 
 			{openState && (
