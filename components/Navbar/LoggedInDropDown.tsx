@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useUser } from '@auth0/nextjs-auth0/client';
 import noImage from '../../public/no_image.jpg';
+import axios from "axios";
 
 export default function LoggedInDropDown() {
   
@@ -11,12 +12,32 @@ export default function LoggedInDropDown() {
 	console.log("USER ID: ", user?.sub);
 
 	const [openState, setOpenState] = React.useState(false);
+
+	const [loadingState, setLoadingState] = React.useState(false);
+	const [imageURL, setImageURL] = React.useState('');
+
+	const getUser = async () => {
+		setLoadingState(true);
+
+		const res = await axios.get(`/api/users/${user?.sub}`);
+
+		if (res.status === 200) {
+			console.log("Res data: ", res.data);
+			setImageURL(res.data.image_url);
+		}
+
+		setLoadingState(true);
+	}
+
+	React.useEffect(() => {
+		getUser();
+	}, [])
 	
 	return (
 		<div className="relative inline-block text-left">
 			<div>
 				<button onClick={() => setOpenState(prev => !prev)} type="button" className="justify-center rounded-md border border-gray-300 bg-white  px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 flex" id="menu-button" aria-expanded="true" aria-haspopup="true">
-					<Image alt={''} src={noImage } width={32} height={32} className='object-cover rounded-full max-w-8 max-h-8 mr-1 border'/>
+					<Image alt={''} src={imageURL ? imageURL : noImage} width={32} height={32} className='object-cover rounded-full max-w-8 max-h-8 mr-1 border'/>
 					<p className="m-auto">Profile</p>
 				</button>
 			</div>
@@ -24,7 +45,7 @@ export default function LoggedInDropDown() {
 			{openState && (
 				<div className="absolute right-0 z-10 mt-2 w-72 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" onFocus={(event: any) => console.log("Focused: ", event)}>
 					<div className="py-2 px-4 text-sm flex" role="none">
-						<Image alt={''} src={noImage } width={48} height={48} className='object-cover rounded-full max-w-12 max-h-12 mr-1 border'/>
+						<Image alt={''} src={imageURL ? imageURL : noImage} width={48} height={48} className='object-cover rounded-full max-w-12 max-h-12 mr-1 border'/>
 						<div className="m-auto">
 							<p className="text-slate-800">Logged in as:</p>
 							<p className="text-slate-800">{user?.email}</p>
