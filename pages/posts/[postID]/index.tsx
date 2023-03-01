@@ -8,6 +8,9 @@ import axios from "axios";
 import noImage from '../../../public/no_image.jpg';
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Comment from "@/components/Comment";
+import DeleteModal from "@/components/DeleteModal";
+import Router from 'next/router'
+import Loading from "@/components/Loading";
 
 export async function getServerSideProps({ params }:any) {
     // Fetch the post with the postID in the params
@@ -31,7 +34,8 @@ const Post = ({ item }: any) => {
     const { user, error, isLoading } = useUser();
 
     const [deleteConfirmationOpenState, setDeleteConfirmationOpenState] = React.useState(false);
-    
+    const [deleteLoadingState, setDeleteLoadingState] = React.useState(false);
+
     const [comments, setComments] = React.useState<any[]>([]);
     const [newComment, setNewComment] = React.useState('');
     const [showComments, setShowComments] = React.useState(false);
@@ -42,39 +46,14 @@ const Post = ({ item }: any) => {
     if (item.image_urls) image = item.image_urls.L[0].S;
 
     const initiateDelete = async () => {
+        setDeleteConfirmationOpenState(false);
+        setDeleteLoadingState(true);
         const result = await axios.delete(`/api/posts/${item.postID.S}`)
-    }
-
-    const Modal = () => {
-        return (
-            <div>
-                {deleteConfirmationOpenState ? (
-                    <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-                        <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                            <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                
-                                <div className="flex justify-between m-4">
-                                    <p className="text-slate-800">Are you sure you want to delete this post?</p>
-                                    <button type="button" onClick={() => setDeleteConfirmationOpenState(prev => !prev)}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true" className="w-6 h-6">
-                                            <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"/>
-                                        </svg>
-                                    </button>
-                                </div>
-
-                                <div className="flex justify-center my-4">
-                                    <button className="bg-sky-400 rounded p-2 mx-1 hover:bg-sky-300" onClick={() => setDeleteConfirmationOpenState(prev => !prev)}>No</button>
-                                    <button className="bg-red-400 rounded p-2 mx-1 hover:bg-red-300" onClick={() => initiateDelete()}>Yes</button>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div></div>
-                )}
-            </div>
-        )
+        console.log("DELETE RESULT: ", result);
+        if (result.status === 200) {
+            Router.push('/');
+        }
+        setDeleteLoadingState(false);
     }
 
     const getUser = async () => {
@@ -111,7 +90,9 @@ const Post = ({ item }: any) => {
     return (
         <div className="rounded p-4 bg-gray-200 max-w-xl min-w-lg mx-auto my-20 shadow-lg shadow-slate-800">
 
-            <Modal/>
+            <DeleteModal openState={deleteConfirmationOpenState} setOpenState={setDeleteConfirmationOpenState} initiateDelete={initiateDelete}/>
+
+            <Loading state={deleteLoadingState}/>
 
             <div className="my-2">
                 <p className="text-3xl my-auto"><strong>{item.productName ? item.productName.S : ''}</strong></p>
@@ -173,7 +154,7 @@ const Post = ({ item }: any) => {
                             </svg>
                             <p className="ml-2">Edit</p>
                         </button>
-                        <button type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 flex justify-start">
+                        <button onClick={() => setDeleteConfirmationOpenState(true)} type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 flex justify-start">
                             <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="w-3 h-3 m-auto" fill="currentColor" viewBox="0 0 448 512">
                                 <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/>
                             </svg>

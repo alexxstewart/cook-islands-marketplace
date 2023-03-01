@@ -20,7 +20,7 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
         }));
 
         console.log("Delete result: ", deleteResult);
+        res.status(200).json({ delete_status: true })
     }
     
-    res.status(200).json({ name: 'John Doe' })
 }
