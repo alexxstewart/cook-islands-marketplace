@@ -14,18 +14,25 @@ export default withApiAuthRequired(async function handler(req: NextApiRequest, r
     
     console.log("Testing the API function for updating a user here: ", req.body);
 
+    const expressionAttributeValues:any = {
+        ":a": req.body.first_name,
+        ":b": req.body.last_name,
+        ":c": req.body.phone_number,
+    }
+    let updateExpressionString = "set firstName = :a, lastName = :b, phoneNumber = :c"
+
+    if (req.body.image_url) {
+        expressionAttributeValues[":d"] = req.body.image_url;
+        updateExpressionString += ', imageURL = :d';
+    }
+
     const data = await ddbDocClient.send(new UpdateCommand({
         TableName: "Users",
         Key: {
             "userID": session?.user.sub,
         },
-        UpdateExpression: "set firstName = :a, lastName = :b, phoneNumber = :c, imageURL = :d",
-        ExpressionAttributeValues: {
-            ":a": req.body.first_name,
-            ":b": req.body.last_name,
-            ":c": req.body.phone_number,
-            ":d": req.body.image_url,
-        }
+        UpdateExpression: updateExpressionString,
+        ExpressionAttributeValues: expressionAttributeValues
     }));
 
     console.log("STATUS: ", data);

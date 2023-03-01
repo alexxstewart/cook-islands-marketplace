@@ -31,8 +31,19 @@ export async function getServerSideProps(context: any) {
 
 const index = ({items}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     return (
-        <div className='mt-20'>
+        <div className='mt-20 mx-10'>
             <p className='text-xl'>Your Listings</p>
+            {items!.length === 0 && (
+                <div className='p-10 my-5 width-4xl bg-gray-300 rounded shadow-xl shadow-gray-500'>
+                    <p className='text-xl mt-4 text-gray-600 text-center'>You have no listings...</p>
+                    <p className='text-sm text-gray-400 text-center'>Create a new listing below</p>
+                    <div className='text-center mt-4'>
+                        <Link href={'/posts/new'} className=" text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                            New Listing
+                        </Link>
+                    </div>
+                </div>
+            )}
             <div className='grid grid-cols-6'>
                 {items!.map((post: any, index: number) => {
                     let imageURL = '/../public/no_image.jpg'; 

@@ -5,11 +5,13 @@ import { useState } from "react";
 import { useS3Upload } from "next-s3-upload";
 import ImageDropBox from '@/components/ImageDropBox';
 import { Button, Loading, Progress } from "@nextui-org/react";
+import Router from 'next/router';
 
 const NewPost = () => {
     
     // UI STATE VALUES
     const [loadingState, setLoadingState] = React.useState(false);
+    const [showCategories, setShowCategories] = React.useState(false);
 
     // FORM INPUT VALUES
     const [title, setTitle] = React.useState('');
@@ -42,10 +44,7 @@ const NewPost = () => {
         setSelectedFiles(current => [...current, ...event.target.files]);
     }
 
-    const submitForm = (urls: string[]) => {
-        console.log("File uploading done, now uploading form data...");
-        console.log(urls);
-        setLoadingState(false);
+    const submitForm = async (urls: string[]) => {
         const data = {
             title: title,
             price: price, 
@@ -54,9 +53,10 @@ const NewPost = () => {
             image_urls: urls,
             location: location
         }
-        console.log("SUBMITED DATA: ", data);
-
-        const response = axios.post('/api/posts/new', data);
+        
+        const res = await axios.post('/api/posts/new', data);
+        if (res.status === 200) Router.push('/'); 
+        setLoadingState(false);
     }
 
     const removeFile = (index: number) => {
@@ -121,10 +121,10 @@ const NewPost = () => {
     }
     
     return (
-        <div className='m-4 w-1/2 mx-auto'>
-            <form action='/api/posts/new' method='post' className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div className='mt-20 w-1/2 mx-auto'>
+            <form action='/api/posts/new' method='post' className="bg-gray-200 shadow-md rounded px-8 pt-6 pb-8 mb-4 ">
                 
-                <p className='text-2xl text-slate-800'>Add a new listing</p>
+                <p className='text-3xl text-slate-800'>Add a new listing</p>
                 
                 <br/>
 
@@ -133,7 +133,7 @@ const NewPost = () => {
                     type="text"
                     id="title"
                     name="title"
-                    className='shadow border border-slate-300 bg-slate-200 w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
+                    className='shadow border border-slate-300 bg-white w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
                     value={title}
                     onChange={(event: any) => setTitle(event?.target.value)}
                 />
@@ -145,14 +145,14 @@ const NewPost = () => {
                             type="text"
                             id="price"
                             name="price"
-                            className='shadow border border-slate-300 bg-slate-200 w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
+                            className='shadow border border-slate-300 bg-white w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
                             value={price}
                             onChange={(event: any) => setPrice(event.target.value)}
                         />
                     </div>
                     <div className='w-full'>
                         <label className="text-gray-800">Select a location</label>
-                        <select value={location} onChange={(event: any) => setLocation(event.target.value)} className="shadow border border-slate-300 bg-slate-200 w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline">
+                        <select value={location} onChange={(event: any) => setLocation(event.target.value)} className="shadow border border-slate-300 bg-white w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline">
                             <option selected>Choose a location</option>
                             {locations.map((location: string) => {
                                 return (
@@ -170,24 +170,35 @@ const NewPost = () => {
                     type="text"
                     id="description"
                     name="description"
-                    className='shadow border border-slate-300 bg-slate-200 w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
+                    className='shadow border border-slate-300 bg-white w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
                     value={description}
                     onChange={(event: any) => setDescription(event.target.value)}
                 />
 
-                <div className='my-4'>
-                    <p className='text-xl text-slate-800'>Select the categories: </p>
+                <div onClick={() => setShowCategories(prev => !prev)} className='my-4 flex justify-between bg-white hover:bg-gray-300 rounded p-2'>
+                    <p className='text-lg text-slate-800 my-auto'>Select the categories: </p>
+                    {showCategories ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className='w-4 h-4 fill-gray-600 my-auto'>
+                            <path d="M201.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L224 173.3 54.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"/>
+                        </svg>
+                    ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className='w-4 h-4 fill-gray-600 my-auto'>
+                            <path d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/>
+                        </svg>
+                    )}
                 </div>
-                <div className='grid grid-cols-4 mb-4'>
-                    {categories.map((category: string, index: number) => {
-                        return (
-                            <div key={category} className='flex-row' onClick={(event: any) => handleCheckboxChange(category, event.target.checked)}>
-                                <input name={category} type='checkbox' className='rounded p-1 m-2 bg-slate-400'/>
-                                <label className='text-slate-800'>{category}</label>
-                            </div>
-                        )
-                    })}
-                </div>
+                {showCategories && (
+                    <div className='grid grid-cols-4 mb-4'>
+                        {categories.map((category: string, index: number) => {
+                            return (
+                                <div key={category} className='flex-row' onClick={(event: any) => handleCheckboxChange(category, event.target.checked)}>
+                                    <input name={category} type='checkbox' className='rounded p-1 m-2 bg-slate-400'/>
+                                    <label className='text-slate-800'>{category}</label>
+                                </div>
+                            )
+                        })}
+                    </div>
+                )}
 
                 <ImageDropBox files={selectedFiles} setFiles={setSelectedFiles}/>
 
