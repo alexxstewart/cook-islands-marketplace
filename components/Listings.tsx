@@ -8,20 +8,22 @@ const Listings = ({ items }: any) => {
         <div>
             <div className='grid grid-cols-6 w-4/6 mx-auto'>
                 {items.map((post: any, index: number) => {
+                    console.log("LISTING POST: ", post);
                     let imageURL = '/../public/no_image.jpg'; 
                     if (post.image_urls) imageURL = post.image_urls.L[0].S
                     return (
                         <Link href={`/posts/${post.postID.S}`} key={post.postID.S}>
-                            <div className='bg-slate-100 rounded m-2 p-4 hover:bg-slate-300 hover:shadow-xl hover:shadow-neutral-500'>
+                            <div className='bg-gray-100 rounded m-2 p-4 hover:bg-gray-200 hover:shadow-lg hover:shadow-neutral-500 hover:p-6'>
                                 <Image
                                     src={imageURL}
                                     alt="Picture of the author"
                                     width={500}
                                     height={500}
+                                    className="mb-2"
                                 />
-                                <p className='text-2xl text-slate-700'>{post.productName ? post.productName.S : ''}</p>
+                                <p className='text-2xl text-slate-700 truncate'>{post.productName ? post.productName.S : ''}</p>
                                 <p className='text-md text-slate-900'>{post.price ? post.price.S : ''}</p>
-                                <p className='text-sm text-slate-500'>{post.description ? post.description.S : ''}</p>
+                                <p className='text-sm text-slate-500 max-h-24 truncate'>{post.description ? post.description.S : ''}</p>
                                 <div className='flex justify-start mt-2'>
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" className='w-4 h-4 fill-red-500'>

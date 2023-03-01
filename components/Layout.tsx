@@ -11,7 +11,7 @@ const Layout = ({ children }: LayoutProps): JSX.Element => {
             <div className="fixed top-0 z-50">
                 <Navbar/>
             </div>
-            <div className="top-50">
+            <div className="top-100">
                 {children}
             </div>
         </>

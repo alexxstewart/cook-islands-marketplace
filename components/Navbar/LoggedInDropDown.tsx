@@ -15,6 +15,7 @@ export default function LoggedInDropDown() {
 
 	const [loadingState, setLoadingState] = React.useState(false);
 	const [imageURL, setImageURL] = React.useState('');
+	const [name, setName] = React.useState('');
 
 	const getUser = async () => {
 		setLoadingState(true);
@@ -22,8 +23,8 @@ export default function LoggedInDropDown() {
 		const res = await axios.get(`/api/users/${user?.sub}`);
 
 		if (res.status === 200) {
-			console.log("Res data: ", res.data);
 			setImageURL(res.data.image_url);
+			setName(res.data.first_name + ' ' + res.data.last_name);
 		}
 
 		setLoadingState(true);
@@ -38,7 +39,7 @@ export default function LoggedInDropDown() {
 			<div>
 				<button onClick={() => setOpenState(prev => !prev)} type="button" className="justify-center rounded-md border border-gray-300 bg-white  px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 flex" id="menu-button" aria-expanded="true" aria-haspopup="true">
 					<Image alt={''} src={imageURL ? imageURL : noImage} width={32} height={32} className='object-cover rounded-full max-w-8 max-h-8 mr-1 border'/>
-					<p className="m-auto">Profile</p>
+					<p className="m-auto">{name ? name : 'Profile'}</p>
 				</button>
 			</div>
 
