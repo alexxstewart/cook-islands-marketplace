@@ -6,6 +6,7 @@ import { ddbDocClient } from '@/lib/ddbDocClient'
 import { ScanCommand } from '@aws-sdk/client-dynamodb'
 import { InferGetServerSidePropsType } from 'next'
 import axios from 'axios'
+import Icon from '../public/next.svg';
 
 export async function getServerSideProps() {
     const importData = await ddbDocClient.send(new ScanCommand({ TableName: "Posts" }));
@@ -45,8 +46,7 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
     ];
 
 	const startSearch = async () => {
-		console.log("Searching: ", searchValue);
-		console.log("Searching for value...");
+
 		const res = await axios.post(`/api/search`, {
 			value: searchValue,
 			categories: selectedCategories,
@@ -69,7 +69,7 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
 				<title>Cook Islands Marketplace</title>
 				<meta name="description" content="Marketplace for Cook Islanders to buy/sell items" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
-				<link rel="icon" href='' />
+				<link rel="shortcut icon" href="/next.svg" />
 			</Head>
 			<main className='bg-white'>
 				<div className='relative'>
@@ -82,7 +82,7 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
 					/>
 					<div className='flex justify-center relative top-36 z-40'>
 						<div className='flex flex-col justify-center w-full'>
-							<p className='text-6xl text-white my-4 py-4 mx-auto text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-indigo-900'><strong>Find your next purchase</strong></p>
+							<p className='text-6xl text-white my-4 py-4 mx-auto text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-indigo-900'><strong>Find your next purchase here</strong></p>
 							<div className='mb-4 flex w-2/3 mx-auto'>
 								<div className='mr-2 flex-none'>
 									<div className="">
@@ -116,7 +116,9 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
 								</div>
 
 								<div className='w-full grow'>   
-									<input value={searchValue} onChange={(event: any) => setSearchValue(event?.target.value)} type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 py-5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search" required/>
+									<input value={searchValue} onKeyDown={(event) => {
+										if (event.key === 'Enter') startSearch();
+									}} onChange={(event: any) => setSearchValue(event?.target.value)} type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 py-5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search" required/>
 								</div>
 
 								<div className='flex-none'>

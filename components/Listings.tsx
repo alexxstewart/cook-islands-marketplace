@@ -8,7 +8,6 @@ const Listings = ({ items }: any) => {
         <div>
             <div className='grid grid-cols-6 w-4/6 mx-auto'>
                 {items.map((post: any, index: number) => {
-                    console.log("LISTING POST: ", post);
                     let imageURL = '/../public/no_image.jpg'; 
                     if (post.image_urls) imageURL = post.image_urls.L[0].S
                     return (
