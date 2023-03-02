@@ -5,34 +5,49 @@ import React from 'react'
 import {  getSession } from '@auth0/nextjs-auth0';
 import Link from 'next/link';
 import Image from 'next/image';
+import axios from 'axios';
+import Loading from '@/components/Loading';
 
 
 export async function getServerSideProps(context: any) {
-
-    // Get the session
-    const session = await getSession(context.req, context.res);
-
+    const session = await getSession(context.req, context.res); // Get the session
     if (session?.user) {
         const importData = await ddbDocClient.send(new ScanCommand({ 
-            FilterExpression: "contains (ownedBy, :email)",
+            FilterExpression: "contains (userID, :userId)",
             ExpressionAttributeValues: {
-              ":email": { S: session?.user.name },
+              ":userId": { S: session?.user.sub },
             },
             TableName: "Posts",
         }));
-    
-        console.log("Returned your posts: ", importData.Items);
-    
         return { props: { items: importData.Items} }
     } else {
         return { props: { items: [] }}
     }
 }
 
-const index = ({items}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Index = ({items}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+
+    const [posts, setPosts] = React.useState<any[]>([]);
+
+    const [loadingState, setLoadingState] = React.useState(false);
+
+    const deletePost = async (postID: string) => {
+        setLoadingState(true);
+        const deleteStatus = await axios.delete(`/api/posts/${postID}`);
+        if (deleteStatus.status === 200) setPosts(posts.filter((post: any) => postID !== post.postID.S));
+        setLoadingState(false);
+    }
+
+    React.useEffect(() => {
+        setPosts(items!);
+    }, [])
+
     return (
         <div className='mt-20 mx-10'>
-            <p className='text-xl'>Your Listings</p>
+
+            <Loading state={loadingState}/>
+
+            <p className='text-3xl my-6'>Your Listings</p>
             {items!.length === 0 && (
                 <div className='p-10 my-5 width-4xl bg-gray-100 rounded shadow-md shadow-gray-400'>
                     <p className='text-xl mt-4 text-gray-600 text-center'>You have no listings...</p>
@@ -44,15 +59,14 @@ const index = ({items}: InferGetServerSidePropsType<typeof getServerSideProps>) 
                     </div>
                 </div>
             )}
-            <div className='grid grid-cols-6'>
-                {items!.map((post: any, index: number) => {
+            <div className='grid lg:grid-cols-6 md:grid-cols-3 sm:grid-cols-1'>
+                {posts.map((post: any, index: number) => {
                     let imageURL = '/../public/no_image.jpg'; 
-                    if (post.image_urls) imageURL = post.image_urls.L[0].S
                     return (
                         <Link href={`/posts/${post.postID.S}`} key={post.postID.S}>
                             <div className='bg-slate-100 rounded m-2 p-4 hover:bg-slate-300 hover:shadow-xl hover:shadow-neutral-500'>
                                 <Image
-                                    src={imageURL}
+                                    src={post.image_urls ? (post.image_urls.L[0] ? post.image_urls.L[0].S : imageURL) : imageURL}
                                     alt="Picture of the author"
                                     width={500}
                                     height={500}
@@ -71,11 +85,13 @@ const index = ({items}: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                             <p className='text-xs text-slate-500'>{post.location ? post.location.S : '-'}</p>
                                         </div>
                                     </div>
-                                    <button type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex justify-start">
+                                    <button onClick={(event) => {
+                                        event.preventDefault();
+                                        deletePost(post.postID.S)
+                                    }} type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex justify-start">
                                         <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="w-3 h-3 m-auto" fill="currentColor" viewBox="0 0 448 512">
                                             <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/>
                                         </svg>
-                                        <p className="ml-2">Delete</p>
                                     </button>
                                 </div>
                             </div>
@@ -87,4 +103,4 @@ const index = ({items}: InferGetServerSidePropsType<typeof getServerSideProps>) 
     )
 }
 
-export default index
+export default Index

@@ -12,6 +12,7 @@ const Comment = (props: Props) => {
 
     const [loadingState, setLoadingState] = React.useState(false);
     const [user, setUser] = React.useState<any>();
+    const [date, setDate] = React.useState<Date | null>(null);
 
     const getUser = async () => {
         if(props.comment.userID){
@@ -24,6 +25,13 @@ const Comment = (props: Props) => {
 
     React.useEffect(() => {
         getUser();
+
+        // Convert the date 
+        if (props.comment.date) {
+            const d = new Date(0); 
+            d.setUTCSeconds(0, Number(props.comment.date));
+            setDate(d);
+        }
     }, [])
 
     return (
@@ -33,7 +41,7 @@ const Comment = (props: Props) => {
                 <div className='bg-gray-300 rounded p-1 mx-1 w-full px-2'>
                     <div className='flex justify-between'>
                         <p className='text-sm'><strong>{user ? user.first_name + ' ' + user.last_name : 'Anonymous'}</strong></p>
-                        <p className='text-xs text-gray-500'>{props.comment.date ? format(fromUnixTime(props.comment.date), 'MMM do, yyyy h:mm aaa') : ''}</p>
+                        <p className='text-xs text-gray-500'>{date ? format(date, 'do MMM, yyyy h:mm aaa') : ''}</p>
                     </div>
                     <p className='text-sm text-gray-500'>{props.comment.comment}</p>
                 </div>

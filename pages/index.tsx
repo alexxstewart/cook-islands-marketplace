@@ -94,11 +94,11 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
 					/>
 					<div className='flex justify-center relative top-36 z-40'>
 						<div className='flex flex-col justify-center w-full'>
-							<p className='text-6xl text-white my-4 py-4 mx-auto'><strong>Cook Islands Marketplace</strong></p>
+							<p className='text-6xl text-white my-4 py-4 mx-auto text-center'><strong>Cook Islands Marketplace</strong></p>
 							<div className='mb-4 flex w-2/3 mx-auto'>
 								<div className='mr-2 flex-none'>
 									<div className="">
-										<div>
+										{/* <div>
 											<button 
 												onClick={(e: any) => {  
 													setOpenState(prev => !prev)
@@ -108,7 +108,7 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
 													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
 												</svg>
 											</button>
-										</div>
+										</div> */}
 
 										{openState && (
 											<div className="absolute left-0 z-10 mt-2 w-96 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">

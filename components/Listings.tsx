@@ -1,32 +1,31 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import noImage from '../public/no_image.jpg';
 
 const Listings = ({ items }: any) => {
     
     return (
         <div>
-            <div className='grid grid-cols-6 w-4/6 mx-auto'>
+            <div className='grid xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 lg:w-4/6 mx-auto'>
                 {items.map((post: any, index: number) => {
                     let imageURL = '/../public/no_image.jpg'; 
-
-                    // if (post.image_urls && post.image_urls.length) imageURL = post.image_urls.L[0].S;
-                    // console.log("IMAGE: ", post.image_urls ? (post.image_urls.L ? post.image_urls.L[0] : (post.image_urls.length > 0 ? post.image_urls[0] : noImage)) : noImage);
-                    console.log(post);
+                    if (post.image_urls && post.image_urls.length > 0) imageURL = post.image_urls[0];
+                    if (post.image_urls.L && post.image_urls.L[0]) imageURL = post.image_urls.L[0].S;
+                    
                     return (
-                        <Link href={`/posts/${post.postID.S}`} key={post.postID.S}>
+                        <Link href={`/posts/${post.postID.S ? post.postID.S : post.postID}`} key={post.postID.S ? post.postID.S : post.postID}>
                             <div className='bg-gray-100 rounded m-2 p-4 hover:bg-gray-200 hover:shadow-lg hover:shadow-neutral-500 hover:p-6'>
                                 <Image
-                                    src={noImage}
+                                    src={imageURL}
+                                    priority
                                     alt="Picture of the author"
                                     width={500}
                                     height={500}
                                     className="mb-2"
                                 />
-                                <p className='text-2xl text-slate-700 truncate'>{post.productName ? (post.productName.S ? post.productName.S : post.productName) : ''}</p>
-                                {/* <p className='text-md text-slate-900'>{post.price.S}</p> */}
-                                {/* <p className='text-sm text-slate-500 max-h-24 truncate'>{post.description || post.description}</p> */}
+                                <p className='text-2xl text-slate-700 truncate'>{post.productName ? (post.productName.S ? post.productName.S : post.productName) : '-'}</p>
+                                <p className='text-md text-slate-900'>{post.price ? (post.price.S ? post.price.S : post.price) : '-'}</p>
+                                <p className='text-sm text-slate-500 max-h-24 truncate'>{post.description ? (post.description.S ? post.description.S : post.description) : '-'}</p>
                                 <div className='flex justify-start mt-2'>
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" className='w-4 h-4 fill-red-500'>
@@ -34,7 +33,7 @@ const Listings = ({ items }: any) => {
                                         </svg>
                                     </div>
                                     <div className='mx-2'>
-                                        {/* <p className='text-xs text-slate-500'>{post.location || post.location}</p> */}
+                                        <p className='text-xs text-slate-500'>{post.location ? (post.location.S ? post.location.S : post.location) : ' - '}</p>
                                     </div>
                                 </div>
                             </div>

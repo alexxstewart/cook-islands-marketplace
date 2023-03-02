@@ -1,6 +1,6 @@
 import React from "react";
 import { ddbDocClient } from "@/lib/ddbDocClient";
-import { DeleteItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
+import { ScanCommand } from "@aws-sdk/client-dynamodb";
 import Image from 'next/image';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
@@ -43,9 +43,6 @@ const Post = ({ item }: any) => {
     const [showComments, setShowComments] = React.useState(false);
 
     const [postUser, setPostUser] = React.useState<any>(null);
-
-    let image = '/../../public/car.jpg';
-    if (item.image_urls) image = item.image_urls.L[0].S;
 
     const initiateDelete = async () => {
         setDeleteConfirmationOpenState(false);
@@ -117,7 +114,7 @@ const Post = ({ item }: any) => {
                     )
                 }) : (
                     <div>
-                        <Image src={'/../public/no_image.jpg'} alt={'No image'} width={500} height={500}/>
+                        <Image src={noImage} alt={'No image'} width={500} height={500}/>
                     </div>
                 )}
             </Carousel>

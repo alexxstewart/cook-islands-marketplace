@@ -128,54 +128,56 @@ const NewPost = () => {
                 
                 <br/>
 
-                <label htmlFor="roll" className='text-slate-800'>Post Title</label>
-                <input
-                    type="text"
-                    id="title"
-                    name="title"
-                    className='shadow border border-slate-300 bg-white w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
-                    value={title}
-                    onChange={(event: any) => setTitle(event?.target.value)}
-                />
+                <div className='my-4'>
+                    <label htmlFor="roll" className='text-slate-800'>Post Title</label>
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        className='shadow border border-slate-300 bg-white w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
+                        value={title}
+                        onChange={(event: any) => setTitle(event?.target.value)}
+                    />
+                </div>
 
-                <div className='grid grid-cols-2'>
-                    <div className='w-full'>
-                        <label htmlFor="price" className='text-slate-800'>Price</label>
-                        <input
-                            type="text"
-                            id="price"
-                            name="price"
-                            className='shadow border border-slate-300 bg-white w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
-                            value={price}
-                            onChange={(event: any) => setPrice(event.target.value)}
-                        />
-                    </div>
-                    <div className='w-full'>
-                        <label className="text-gray-800">Select a location</label>
-                        <select value={location} onChange={(event: any) => setLocation(event.target.value)} className="shadow border border-slate-300 bg-white w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline">
-                            <option selected>Choose a location</option>
-                            {locations.map((location: string) => {
-                                return (
-                                    <option value={location} key={location}>{location}</option>
-                                )
-                            })}
-                        </select>
-                    </div>
+                <div className='w-full my-4'>
+                    <label htmlFor="price" className='text-slate-800'>Price</label>
+                    <input
+                        type="text"
+                        id="price"
+                        name="price"
+                        className="shadow border border-slate-300 bg-white w-full rounded py-2.5 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+                        value={price}
+                        onChange={(event: any) => setPrice(event.target.value)}
+                    />
+                </div>
+
+                <div className='w-full my-4'>
+                    <label className="text-gray-800">Select a location</label>
+                    <select value={location} onChange={(event: any) => setLocation(event.target.value)} className="shadow border border-slate-300 bg-white w-full rounded py-2.5 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline">
+                        <option selected>Choose a location</option>
+                        {locations.map((location: string) => {
+                            return (
+                                <option value={location} key={location}>{location}</option>
+                            )
+                        })}
+                    </select>
                 </div>
             
                 
+                <div className='my-4'>
+                    <label htmlFor="description" className='text-slate-800'>Description</label>
+                    <input
+                        type="text"
+                        id="description"
+                        name="description"
+                        className='shadow border border-slate-300 bg-white w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
+                        value={description}
+                        onChange={(event: any) => setDescription(event.target.value)}
+                    />
+                </div>
 
-                <label htmlFor="description" className='text-slate-800'>Description</label>
-                <input
-                    type="text"
-                    id="description"
-                    name="description"
-                    className='shadow border border-slate-300 bg-white w-full rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline'
-                    value={description}
-                    onChange={(event: any) => setDescription(event.target.value)}
-                />
-
-                <div onClick={() => setShowCategories(prev => !prev)} className='my-4 flex justify-between bg-white hover:bg-gray-300 rounded p-2'>
+                {/* <div onClick={() => setShowCategories(prev => !prev)} className='my-8 flex justify-between bg-white hover:bg-gray-300 rounded p-2'>
                     <p className='text-lg text-slate-800 my-auto'>Select the categories: </p>
                     {showCategories ? (
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className='w-4 h-4 fill-gray-600 my-auto'>
@@ -198,11 +200,11 @@ const NewPost = () => {
                             )
                         })}
                     </div>
-                )}
+                )} */}
 
                 <ImageDropBox files={selectedFiles} setFiles={setSelectedFiles}/>
 
-                <div className='mt-2'></div>
+                <div className='my-4'></div>
                 
                 {files.length > 0 && (
                     <div className='mb-4'>
@@ -227,7 +229,7 @@ const NewPost = () => {
                     </div>
                 )}
 
-                <div className='flex items-center justify-center'>
+                <div className='flex items-center justify-center mt-4'>
                     <Button 
                         disabled={loadingState}
                         icon={loadingState && <Loading />} 

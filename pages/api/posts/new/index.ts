@@ -5,8 +5,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid';
 
 export default withApiAuthRequired(async function handler( req: NextApiRequest, res: NextApiResponse) {
-    console.log("Testing the API function here: ", req.body);
-
     const session = await getSession(req, res); // Get the users session
 
     const data = await ddbDocClient.send(new PutCommand({
