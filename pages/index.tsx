@@ -1,11 +1,11 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import Listings from '@/components/Listings'
-import React from 'react'
-import { ddbDocClient } from '@/lib/ddbDocClient'
-import { ScanCommand } from '@aws-sdk/client-dynamodb'
-import { InferGetServerSidePropsType } from 'next'
-import axios from 'axios'
+import Head from 'next/head';
+import Image from 'next/image';
+import Listings from '@/components/Listings';
+import React from 'react';
+import { ddbDocClient } from '@/lib/ddbDocClient';
+import { ScanCommand } from '@aws-sdk/client-dynamodb';
+import { InferGetServerSidePropsType } from 'next';
+import axios from 'axios';
 
 export async function getServerSideProps() {
 	const response = await ddbDocClient.send(new ScanCommand({
