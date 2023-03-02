@@ -82,7 +82,7 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
 			<main className='bg-white'>
 				<div className='relative'>
 					<Image
-						src={'rarotongan.jpg'} 
+						src={'/rarotongan.jpg'} 
 						alt={'Rarotonga'} 
 						width={2000} 
 						height={150} 

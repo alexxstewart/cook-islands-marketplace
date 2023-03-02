@@ -2,7 +2,7 @@ import React, {useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'
 import Image from 'next/image'
 import { useUser } from '@auth0/nextjs-auth0/client';
-import noImage from 'no_image.jpg';
+import noImage from '/no_image.jpg';
 import axios from 'axios';
 import Link from 'next/link';
 import { useS3Upload } from "next-s3-upload";

@@ -33,7 +33,6 @@ const NewPost = () => {
         for (let index = 0; index < files.length; index++) {
             const file:any = files[index];
             const { url } = await uploadToS3(file);
-            console.log("Got url: ", url);
             savedImageURLs.push(url);
             setUrls(current => [...current, url]);
         }
@@ -97,8 +96,6 @@ const NewPost = () => {
     ];
   
     const handleCheckboxChange = (category: string, checkedState: any) => {
-        console.log(category);
-        console.log(checkedState);
         if (checkedState) setSelectedCategories(current => [...current, category]);
         else if (!checkedState) { // Remove category from the selected category array
             const index = selectedCategories.indexOf(category);
