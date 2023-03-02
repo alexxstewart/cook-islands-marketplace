@@ -3,12 +3,8 @@ import { DeleteItemCommand } from "@aws-sdk/client-dynamodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler( req: NextApiRequest, res: NextApiResponse) {
-    console.log("In the comment function now...");
-
     if (req.method === 'DELETE') {
-        
         const { postId, commentId } = req.query;
-
         const deleteResult = await ddbDocClient.send(new DeleteItemCommand({ 
             TableName: "Comment",
             Key: {
@@ -17,9 +13,10 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
                 },
             },
         }));
-
-        console.log("Delete result: ", deleteResult);
+        if (deleteResult['$metadata'].httpStatusCode === 200) {
+            res.status(200).json({ name: 'John Doe' })
+        } else {
+            res.status(500).json({ name: 'John Doe' })
+        }
     }   
-    
-    res.status(200).json({ name: 'John Doe' })
 }

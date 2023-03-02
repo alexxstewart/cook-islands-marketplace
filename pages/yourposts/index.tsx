@@ -34,7 +34,7 @@ const index = ({items}: InferGetServerSidePropsType<typeof getServerSideProps>) 
         <div className='mt-20 mx-10'>
             <p className='text-xl'>Your Listings</p>
             {items!.length === 0 && (
-                <div className='p-10 my-5 width-4xl bg-gray-300 rounded shadow-xl shadow-gray-500'>
+                <div className='p-10 my-5 width-4xl bg-gray-100 rounded shadow-md shadow-gray-400'>
                     <p className='text-xl mt-4 text-gray-600 text-center'>You have no listings...</p>
                     <p className='text-sm text-gray-400 text-center'>Create a new listing below</p>
                     <div className='text-center mt-4'>

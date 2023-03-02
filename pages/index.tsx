@@ -78,11 +78,11 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
 						alt={'Rarotonga'} 
 						width={2000} 
 						height={150} 
-						className='absolute shadow-xl shadow-gray-300 object-cover h-96 w-full'
+						className='absolute shadow-xl shadow-gray-300 object-cover h-96 w-full brightness-75'
 					/>
 					<div className='flex justify-center relative top-36 z-40'>
 						<div className='flex flex-col justify-center w-full'>
-							<p className='text-6xl text-white my-4 py-4 mx-auto text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-indigo-900'><strong>Find your next purchase here</strong></p>
+							<p className='text-6xl text-white my-4 py-4 mx-auto'><strong>Cook Islands Marketplace</strong></p>
 							<div className='mb-4 flex w-2/3 mx-auto'>
 								<div className='mr-2 flex-none'>
 									<div className="">
@@ -133,7 +133,7 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
 					</div>
 				</div>
 
-				<div className='relative top-64'>
+				<div className='relative top-64 pb-40'>
 					<Listings items={posts}/>
 				</div>
 			</main>

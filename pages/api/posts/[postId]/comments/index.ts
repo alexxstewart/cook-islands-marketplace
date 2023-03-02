@@ -4,11 +4,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuidv4 } from 'uuid';
 
 export default async function handler( req: NextApiRequest, res: NextApiResponse) {
-    console.log("In the get comments api function now...", req.method);
-
+    const { postId } = req.query;
     if (req.method === 'POST') {
-        const { postId } = req.query;
-
         const data = await ddbDocClient.send(new PutCommand({
             TableName: "Comments",
             Item: {
@@ -19,15 +16,19 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
                 date: Date.now().toString(),
             },
         }));
-    
         if (data['$metadata'].httpStatusCode === 200) {
             res.status(200).json({ commentAdded: true });
         } else {
             res.status(500).json({ commentAdded: false });
         }
     } else if (req.method === 'GET') { // Get the comments for a post
-        console.log("GETTING COMMENTS NOW...")
-        const result = await ddbDocClient.send(new ScanCommand({ TableName: "Comments" }));
+        const result = await ddbDocClient.send(new ScanCommand({ 
+            TableName: "Comments",
+            FilterExpression: "contains (postID, :postid)",
+            ExpressionAttributeValues: {
+              ":postid": postId,
+            }, 
+        }));
         res.status(200).json({ items: result.Items });
     }
 }
