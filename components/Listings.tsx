@@ -8,7 +8,7 @@ const Listings = ({ items }: any) => {
         <div>
             <div className='grid xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 lg:w-4/6 mx-auto'>
                 {items.map((post: any, index: number) => {
-                    let imageURL = '/../public/no_image.jpg'; 
+                    let imageURL = 'no_image.jpg'; 
                     if (post.image_urls && post.image_urls.length > 0) imageURL = post.image_urls[0];
                     if (post.image_urls.L && post.image_urls.L[0]) imageURL = post.image_urls.L[0].S;
                     

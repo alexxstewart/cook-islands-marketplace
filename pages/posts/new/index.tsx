@@ -40,10 +40,6 @@ const NewPost = () => {
         submitForm(savedImageURLs);
     };
 
-    const handleFiles = (event: any) => {
-        setSelectedFiles(current => [...current, ...event.target.files]);
-    }
-
     const submitForm = async (urls: string[]) => {
         const data = {
             title: title,
@@ -57,12 +53,6 @@ const NewPost = () => {
         const res = await axios.post('/api/posts/new', data);
         if (res.status === 200) Router.push('/'); 
         setLoadingState(false);
-    }
-
-    const removeFile = (index: number) => {
-        const newFiles = selectedFiles;
-        newFiles.splice(index, 1);
-        setSelectedFiles([...newFiles]);
     }
 
     const categories = [

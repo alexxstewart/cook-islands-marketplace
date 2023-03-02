@@ -10,14 +10,10 @@ export async function getServerSideProps() {
 
     const importData = await ddbDocClient.send(new ScanCommand({ TableName: "Posts" }));
 
-    console.log("Import data: ", importData);
-
     return { props: { items: importData.Items} }
 }
 
 const index = ({items}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-    
-    console.log("Loaded data: ", items);
     
     return (
         <div>

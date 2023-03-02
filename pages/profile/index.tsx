@@ -2,7 +2,7 @@ import React, {useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'
 import Image from 'next/image'
 import { useUser } from '@auth0/nextjs-auth0/client';
-import noImage from '../../public/no_image.jpg';
+import noImage from 'no_image.jpg';
 import axios from 'axios';
 import Link from 'next/link';
 import { useS3Upload } from "next-s3-upload";
@@ -12,7 +12,6 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { InferGetServerSidePropsType } from 'next';
 import { Progress } from '@nextui-org/react';
 import Router from 'next/router'
-import { upload } from '@/lib/s3Upload';
 
 // This gets called on every request
 export async function getServerSideProps(context: any) {
@@ -154,7 +153,6 @@ const ProfilePage = ({items}: InferGetServerSidePropsType<typeof getServerSidePr
                 </div>
 
                 {files.map((file: any) => {
-                    console.log("File: ", file);
                     return (
                         <div key={'123'} className='my-4'>
                             <div className='flex justify-between bg-slate-500 rounded p-2'>

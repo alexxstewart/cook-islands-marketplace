@@ -5,7 +5,7 @@ import Image from 'next/image';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
 import axios from "axios";
-import noImage from '../../../public/no_image.jpg';
+import noImage from 'no_image.jpg';
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Comment from "@/components/Comment";
 import DeleteModal from "@/components/DeleteModal";

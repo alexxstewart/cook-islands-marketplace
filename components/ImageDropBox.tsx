@@ -34,7 +34,7 @@ const ImageDropBox = ({files, setFiles}: any) => {
 
             {files.length === 0 && ( 
                 <div>
-                    <Image className='mx-auto rounded' alt={''} src={'/../public/no_image.jpg'} width={100} height={100}/> 
+                    <Image className='mx-auto rounded' alt={''} src={'no_image.jpg'} width={100} height={100}/> 
                 </div>
             )}
 

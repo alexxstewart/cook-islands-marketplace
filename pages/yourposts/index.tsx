@@ -60,8 +60,8 @@ const Index = ({items}: InferGetServerSidePropsType<typeof getServerSideProps>) 
                 </div>
             )}
             <div className='grid lg:grid-cols-6 md:grid-cols-3 sm:grid-cols-1'>
-                {posts.map((post: any, index: number) => {
-                    let imageURL = '/../public/no_image.jpg'; 
+                {posts.map((post: any,) => {
+                    let imageURL = 'no_image.jpg'; 
                     return (
                         <Link href={`/posts/${post.postID.S}`} key={post.postID.S}>
                             <div className='bg-slate-100 rounded m-2 p-4 hover:bg-slate-300 hover:shadow-xl hover:shadow-neutral-500'>

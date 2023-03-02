@@ -8,7 +8,6 @@ import { InferGetServerSidePropsType } from 'next'
 import axios from 'axios'
 
 export async function getServerSideProps() {
-	const searchValue = '';
 	const response = await ddbDocClient.send(new ScanCommand({
         TableName: "Posts"
     }));
@@ -60,9 +59,7 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
 				value: searchValue,
 				categories: selectedCategories,
 			});
-	
-			console.log("ITEMs on search: ", res);
-	
+
 			if (res.status === 200) {
 				setPosts(res.data.posts);
 			}
@@ -71,7 +68,6 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
 	}
 
 	React.useEffect(() => {
-		console.log("ITEMS on intial page load: ", items);
 		setPosts(items!); 
 	}, [])
 
@@ -115,7 +111,7 @@ export default function Home({items}: InferGetServerSidePropsType<typeof getServ
 												<div className='grid grid-cols-2'>
 													{categories.map((category: string) => {
 															return (
-																<div onClick={() => console.log("logging...")} key={category} className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+																<div key={category} className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
 																	<input id={'Checkbox-' + category} type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"/>
 																	<label htmlFor="checkbox-item-4" className="w-full ml-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">{category}</label>
 																</div>
